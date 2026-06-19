@@ -63,6 +63,22 @@ describe('detectFormat', () => {
     expect(detectFormat(SRT_SAMPLE)).toBe('srt');
   });
 
+  it('detects index-less srt from a leading timing line with text (issue #32)', () => {
+    expect(detectFormat('00:00:01,000 --> 00:00:02,500\nHi\n')).toBe('srt');
+  });
+
+  it('does not treat a lone timing line with no following text as srt (issue #32)', () => {
+    expect(detectFormat('00:00:01,000 --> 00:00:02,500\n')).toBeNull();
+  });
+
+  it('detects srt with a blank line between index and timing (issue #32)', () => {
+    expect(detectFormat('1\n\n00:00:01,000 --> 00:00:02,000\nHi')).toBe('srt');
+  });
+
+  it('returns null for an index line with no following line (issue #32)', () => {
+    expect(detectFormat('1\n\n')).toBeNull();
+  });
+
   it('detects srt with a leading BOM', () => {
     expect(detectFormat('\uFEFF' + SRT_SAMPLE)).toBe('srt');
   });
@@ -104,6 +120,13 @@ describe('parseSubtitle', () => {
     expect(transcript.meta.format).toBe('vtt');
     expect(transcript.meta.cueCount).toBe(2);
     expect(transcript.cues[1]?.text).toBe('Second cue');
+  });
+
+  it('parses index-less srt detected from the input (issue #32)', () => {
+    const transcript = parseSubtitle('00:00:01,000 --> 00:00:02,500\nHi\n');
+    expect(transcript.meta.format).toBe('srt');
+    expect(transcript.cues).toHaveLength(1);
+    expect(transcript.cues[0]?.text).toBe('Hi');
   });
 
   it('sets meta.source when provided without disturbing other meta', () => {
