@@ -19,7 +19,7 @@ import { afterEach, describe, it } from 'mocha';
  */
 
 /** Plugin id + command id, as registered by `src/main.ts` `onload()`. */
-const CONVERT_COMMAND_ID = 'obsidian-subtitles-md:convert-subtitle-to-note';
+const CONVERT_COMMAND_ID = 'subtitles-md:convert-subtitle-to-note';
 /** View type bound to `.srt`/`.vtt` by `src/render/view.ts`. */
 const TRANSCRIPT_VIEW_TYPE = 'subtitles-md-transcript-view';
 

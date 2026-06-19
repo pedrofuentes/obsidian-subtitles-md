@@ -15,8 +15,8 @@ describe('Subtitles MD smoke test', function () {
       }).plugins;
 
       return {
-        enabled: plugins.enabledPlugins.has('obsidian-subtitles-md'),
-        loaded: Object.prototype.hasOwnProperty.call(plugins.plugins, 'obsidian-subtitles-md'),
+        enabled: plugins.enabledPlugins.has('subtitles-md'),
+        loaded: Object.prototype.hasOwnProperty.call(plugins.plugins, 'subtitles-md'),
       };
     });
 
