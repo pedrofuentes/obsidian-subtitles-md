@@ -1,6 +1,13 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      // `obsidian` ships types only; map it to a runtime stub for unit tests of
+      // Obsidian-coupled modules. Production builds keep `obsidian` external.
+      obsidian: `${import.meta.dirname}/tests/mocks/obsidian.mjs`,
+    },
+  },
   test: {
     globals: true,
     environment: 'node',
