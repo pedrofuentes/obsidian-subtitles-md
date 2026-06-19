@@ -107,7 +107,7 @@ function parseTiming(line: string): { startMs: number; endMs: number } | null {
   const endToken = rest.split(/\s+/)[0] ?? '';
   const endMs = parseTimestamp(endToken);
 
-  if (startMs === null || endMs === null) {
+  if (startMs === null || endMs === null || endMs < startMs) {
     return null;
   }
 
@@ -133,7 +133,7 @@ function parseTimestamp(value: string): number | null {
   return ((hours * 60 + minutes) * 60 + seconds) * 1000 + millis;
 }
 
-const VOICE_TAG = /<v(?:\.[^\s>]+)*[ \t]+([^>]*)>/i;
+const VOICE_TAG = /<v(?:\.[^\s>.]+)*[ \t]+([^>]*)>/i;
 const ANY_TAG = /<[^>]*>/g;
 
 /** Extract an optional speaker from voice tags and strip all inline markup. */
