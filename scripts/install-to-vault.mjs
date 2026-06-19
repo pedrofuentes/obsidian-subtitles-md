@@ -21,7 +21,7 @@ export function resolveVaultPath({ argv = [], env = {}, cwd = process.cwd() }) {
 	return join(cwd, 'test-vault');
 }
 
-export function withPluginEnabled(existingJson, id = 'obsidian-subtitles-md') {
+export function withPluginEnabled(existingJson, id = 'subtitles-md') {
 	let plugins = [];
 	
 	if (existingJson && existingJson.trim()) {
@@ -76,7 +76,7 @@ function main() {
 		process.exit(1);
 	}
 
-	const pluginId = 'obsidian-subtitles-md';
+	const pluginId = 'subtitles-md';
 	const pluginDir = join(absoluteVaultPath, '.obsidian', 'plugins', pluginId);
 	mkdirSync(pluginDir, { recursive: true });
 
