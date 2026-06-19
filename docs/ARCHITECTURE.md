@@ -14,17 +14,31 @@ obsidian-subtitles-md/
 ├── src/
 │   ├── main.ts                 ← Plugin entry (extends Obsidian Plugin)
 │   ├── settings.ts             ← Settings tab + defaults
-│   ├── parser/                 ← Subtitle parsers (.srt, .vtt → cues)
+│   ├── model/                  ← Core types (Transcript, Cue)
+│   │   └── index.ts
+│   ├── parser/                 ← Subtitle parsers (.srt, .vtt → Transcript)
 │   │   ├── srt.ts
-│   │   └── vtt.ts
-│   └── convert/                ← Cue → Markdown rendering
-│       └── markdown.ts
+│   │   ├── vtt.ts
+│   │   └── index.ts            ← Format detection
+│   ├── transform/              ← Transcript transformations (pure)
+│   │   ├── reflow.ts           ← Reflow cues → readable paragraphs
+│   │   └── speakers.ts         ← Speaker handling
+│   ├── serialize/              ← Output formatters (pure)
+│   │   └── markdown.ts         ← Transcript → Markdown note
+│   ├── render/                 ← Reading-optimized rendering (Obsidian)
+│   │   ├── codeblock.ts        ← ```transcript``` processor
+│   │   ├── postprocess.ts      ← Reading-mode styling
+│   │   └── view.ts             ← Custom file view
+│   └── commands/               ← Command implementations
+│       └── convertToNote.ts    ← "Convert subtitle file → note"
 ├── tests/                      ← Vitest unit/integration tests
 ├── docs/                       ← Associated agent documentation
+│   └── superpowers/specs/      ← Design specs
 ├── manifest.json               ← Obsidian plugin manifest (id, version, minAppVersion)
 ├── versions.json               ← minAppVersion compatibility map
 ├── esbuild.config.mjs          ← Bundler config (format: 'cjs' → main.js)
 ├── main.js                     ← GENERATED bundle (do NOT hand-edit)
+├── styles.css                  ← Optional plugin styles
 ├── tsconfig.json               ← module: ESNext, target: ES2021, strict
 ├── AGENTS.md                   ← Agent instructions (MUST rules)
 ├── ROADMAP.md                  ← Project phases and plan
@@ -49,20 +63,36 @@ obsidian-subtitles-md/
 
 ## Module Boundaries
 
-- `src/main.ts` — Obsidian lifecycle (`onload`/`onunload`), command registration, wiring. Depends on `parser/` and `convert/`.
-- `src/parser/` — Pure functions: subtitle text → normalized cue objects. **No Obsidian API dependency** (keeps it unit-testable).
-- `src/convert/` — Pure functions: cues → Markdown string. **No Obsidian API dependency.**
-- `src/settings.ts` — Settings model + `PluginSettingTab`. Depends on the Obsidian API.
+**Pure core** (no Obsidian API dependency → unit-testable without mocking):
+- `src/model/` — Core types: `Transcript`, `Cue`, shared interfaces.
+- `src/parser/` — Subtitle text → `Transcript` objects. Includes `srt.ts`, `vtt.ts`, and `index.ts` (format detection).
+- `src/transform/` — `Transcript` transformations: `reflow.ts` (cues → readable paragraphs), `speakers.ts` (speaker handling).
+- `src/serialize/` — Output formatters: `markdown.ts` (Transcript → Markdown string).
 
-> Keep parsing/conversion logic free of the Obsidian API so it can be tested without mocking the app. `main.ts` and `settings.ts` are the only Obsidian-coupled modules.
+**Obsidian layer** (depends on Obsidian API):
+- `src/main.ts` — Plugin lifecycle (`onload`/`onunload`), command registration, rendering processors, wiring.
+- `src/settings.ts` — Settings model + `PluginSettingTab`.
+- `src/commands/` — Command implementations: `convertToNote.ts` (reads via Vault API → parse → transform → serialize → write note).
+- `src/render/` — Reading-optimized rendering: `codeblock.ts` (` ```transcript ` processor), `postprocess.ts` (reading-mode styling), `view.ts` (custom file view).
+
+> The pure core (`model`/`parser`/`transform`/`serialize`) holds the bulk of logic and requires **no Obsidian mocking**. The Obsidian layer gets light mocks for integration tests + real-app e2e.
 
 ## Data Flow
 
-1. User invokes the import command (or drops a subtitle file).
-2. `main.ts` reads the source file via the **Vault API**.
-3. `parser/` parses `.srt`/`.vtt` → cue objects (timestamps + text).
-4. `convert/` renders cues → Markdown.
-5. `main.ts` writes the resulting note via the **Vault API**.
+**Phase 1 — Convert to note (searchable):**
+1. User runs "Convert subtitle file → transcript note" command.
+2. `commands/convertToNote.ts` reads the source file via the **Vault API**.
+3. `parser/` detects format and parses `.srt`/`.vtt` → `Transcript` object (model).
+4. `transform/reflow` transforms fragmented cues → readable paragraphs (per settings).
+5. `serialize/markdown` formats `Transcript` → Markdown string (frontmatter + prose).
+6. `commands/convertToNote.ts` writes the resulting sibling note via the **Vault API** → searchable/linkable.
+
+**Phase 2 — Render for reading (visualize):**
+1. User opens a ` ```transcript ` code-block, transcript note in reading mode, or `.srt`/`.vtt` file.
+2. `render/codeblock.ts` (code-block processor), `render/postprocess.ts` (reading-mode post-processor), or `render/view.ts` (custom file view) reads source content.
+3. `parser/` parses → `Transcript`.
+4. `transform/reflow` transforms → paragraphs.
+5. `render/*` outputs reading-optimized HTML/DOM (styled via `styles.css`).
 
 ## Key Files
 
@@ -76,14 +106,29 @@ obsidian-subtitles-md/
 ## Code Patterns
 
 > Greenfield: representative idiomatic patterns (no codebase yet). Prefer pure,
-> Obsidian-free logic for parsing/conversion; isolate API calls in `main.ts`.
+> Obsidian-free logic for parsing/transformation/serialization; isolate API calls
+> in `main.ts`, `commands/`, `render/`, and `settings.ts`.
 
 ✅ **Good** — pure, named export, testable without Obsidian:
 ```typescript
-export interface Cue { start: number; end: number; text: string; }
+// src/model/index.ts
+export interface Cue {
+  index: number;
+  startMs: number;
+  endMs: number;
+  text: string;
+  speaker?: string;
+}
 
-export function parseSrt(input: string): Cue[] {
-  return splitBlocks(input).map(toCue);
+export interface Transcript {
+  cues: Cue[];
+  meta: { format: 'srt' | 'vtt'; durationMs: number; cueCount: number; source?: string };
+}
+
+// src/parser/srt.ts
+export function parseSrt(input: string): Transcript {
+  const cues = splitBlocks(input).map(toCue);
+  return { cues, meta: { format: 'srt', durationMs: lastCue.endMs, cueCount: cues.length } };
 }
 ```
 
