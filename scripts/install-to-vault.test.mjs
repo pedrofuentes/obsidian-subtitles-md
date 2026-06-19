@@ -35,7 +35,7 @@ describe('resolveVaultPath', () => {
 			env: {},
 			cwd: '/some/path'
 		});
-		expect(result).toBe('/some/path/test-vault');
+		expect(result.replace(/\\/g, '/')).toBe('/some/path/test-vault');
 	});
 });
 
