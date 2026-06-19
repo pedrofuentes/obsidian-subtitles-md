@@ -145,7 +145,12 @@ export async function renderTranscriptBlock(
       renderMessage(el, `Transcript file not found: ${reference}`);
       return;
     }
-    content = await opts.app.vault.read(file);
+    try {
+      content = await opts.app.vault.read(file);
+    } catch {
+      renderMessage(el, `Couldn't read transcript file: ${reference}`);
+      return;
+    }
   } else {
     content = source;
   }
