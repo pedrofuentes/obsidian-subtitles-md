@@ -126,7 +126,7 @@ function parseTimestamp(value: string): number | null {
   const seconds = Number(match[3]);
   const millis = Number(match[4]);
 
-  if (seconds >= 60) {
+  if (minutes >= 60 || seconds >= 60) {
     return null;
   }
 
