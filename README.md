@@ -98,7 +98,7 @@ The `install:vault` command builds the plugin and installs it into an Obsidian v
 
 1. **`--vault <path>`** — command-line argument (supports `--vault path` or `--vault=path`)
 2. **`OBSIDIAN_VAULT`** — environment variable
-3. **`test-vault/`** — default bundled demo vault (created by the command if needed)
+3. **`test-vault/`** — the demo vault committed to this repo
 
 **Quick start with the bundled demo vault:**
 
