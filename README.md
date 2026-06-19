@@ -83,10 +83,11 @@ Click any `.srt` or `.vtt` file in the file explorer. The plugin opens it in a r
 ## Development
 
 ```bash
-pnpm install       # Install dependencies (Node 22+ required)
+pnpm install       # Install dependencies (Node 22+ recommended)
 pnpm run build     # Build the plugin
 pnpm test          # Run tests
-pnpm run lint      # Lint and type-check
+pnpm run lint      # Lint with ESLint
+pnpm run typecheck # Type-check with tsc
 ```
 
 This project follows a **test-driven development** workflow with **Sentinel review** before merging. See [`AGENTS.md`](./AGENTS.md) for details.
