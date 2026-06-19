@@ -1,5 +1,5 @@
 /**
- * Settings tab UI for the obsidian-subtitles-md plugin.
+ * Settings tab UI for the Subtitles MD plugin.
  *
  * Renders one {@link Setting} per persisted preference defined in
  * {@link SubtitlesMdSettings}. Each control reads its current value from the
