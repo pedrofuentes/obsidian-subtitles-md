@@ -164,6 +164,21 @@ function makeFileApp(path: string, content: string | null): App {
   return { vault } as unknown as App;
 }
 
+/**
+ * App whose vault resolves a real `TFile` at `path` but whose `read` REJECTS,
+ * simulating a file deleted/moved mid-render (Obsidian Sync / external edit) or
+ * a disk I/O error.
+ */
+function makeRejectingFileApp(path: string): App {
+  const file = Object.assign(new TFile(), { path, name: path });
+  const vault = {
+    getAbstractFileByPath: (p: string): unknown => (p === path ? file : null),
+    read: (): Promise<string> =>
+      Promise.reject(new Error('EIO: simulated read failure')),
+  };
+  return { vault } as unknown as App;
+}
+
 const NOOP_APP = {} as unknown as App;
 
 const SRT_FIXTURE = [
@@ -342,6 +357,20 @@ describe('renderTranscriptBlock', () => {
     const messages = fake.findByClass('subtitles-md-message');
     expect(messages).toHaveLength(1);
     expect(messages[0]?.textContent).toContain('Subs/missing.srt');
+    expect(fake.findByClass('subtitles-md-paragraph')).toHaveLength(0);
+  });
+
+  it('renders a friendly message when reading the referenced file rejects', async () => {
+    const app = makeRejectingFileApp('Subs/episode.srt');
+    const { el, fake } = makeEl();
+
+    await expect(
+      renderTranscriptBlock('file: Subs/episode.srt', el, { app }),
+    ).resolves.toBeUndefined();
+
+    const messages = fake.findByClass('subtitles-md-message');
+    expect(messages).toHaveLength(1);
+    expect(messages[0]?.textContent.length).toBeGreaterThan(0);
     expect(fake.findByClass('subtitles-md-paragraph')).toHaveLength(0);
   });
 });
