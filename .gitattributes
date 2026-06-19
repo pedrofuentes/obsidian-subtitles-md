@@ -1,0 +1,2 @@
+tests/fixtures/**/*.srt -text
+tests/fixtures/**/*.vtt -text

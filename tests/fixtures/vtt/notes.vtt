@@ -1,0 +1,20 @@
+WEBVTT
+
+NOTE This is a comment block.
+It can span multiple lines.
+Useful for metadata or explanations.
+
+00:00:01.000 --> 00:00:03.500
+First subtitle appears here.
+
+NOTE Another comment
+describing the next section.
+
+00:00:04.000 --> 00:00:07.000
+Second subtitle with preceding note.
+
+00:00:08.000 --> 00:00:10.500
+Final subtitle in the file.
+
+NOTE Closing notes can document
+anything about the file.

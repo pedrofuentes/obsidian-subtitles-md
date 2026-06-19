@@ -1,0 +1,17 @@
+WEBVTT
+
+cue-1
+00:00:01.000 --> 00:00:03.500 align:start
+This cue is aligned to the start.
+
+cue-2
+00:00:04.000 --> 00:00:07.000 position:10% line:90%
+This cue has custom positioning.
+
+cue-3
+00:00:07.500 --> 00:00:10.200 align:middle position:50%
+Centered cue with middle alignment.
+
+cue-4
+00:00:10.800 --> 00:00:14.000 size:80% align:end
+This cue is 80% width and aligned to the end.

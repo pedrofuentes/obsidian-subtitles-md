@@ -1,0 +1,15 @@
+1
+00:00:00,500 --> 00:00:03,000
+This is the first line of text.
+And here is the second line.
+
+2
+00:00:03,500 --> 00:00:07,200
+Subtitles can have multiple lines
+to convey longer messages
+or split text for readability.
+
+3
+00:00:08,000 --> 00:00:11,500
+Each cue can contain
+as many lines as needed.

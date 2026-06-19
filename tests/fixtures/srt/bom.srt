@@ -1,0 +1,11 @@
+﻿1
+00:00:01,000 --> 00:00:03,500
+This file starts with a UTF-8 BOM.
+
+2
+00:00:04,000 --> 00:00:07,000
+The BOM is three bytes: EF BB BF.
+
+3
+00:00:08,000 --> 00:00:10,500
+Parsers should strip it automatically.
