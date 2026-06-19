@@ -11,6 +11,9 @@ coverage/
 # Obsidian plugin local data
 data.json
 
+# wdio-obsidian-service downloaded Obsidian binaries / vault sandboxes
+.obsidian-cache/
+
 # Agent workflow
 .worktrees/
 
