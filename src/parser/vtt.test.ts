@@ -263,4 +263,44 @@ describe('parseVtt', () => {
 
     expect(transcript.cues.map((c) => c.index)).toEqual([1, 2]);
   });
+
+  it('handles an adversarial voice tag in bounded time (no ReDoS)', () => {
+    const malicious = '<v' + '.a'.repeat(60);
+    const input = [
+      'WEBVTT',
+      '',
+      '00:00:01.000 --> 00:00:02.000',
+      malicious,
+    ].join('\n');
+
+    const start = performance.now();
+    const transcript = parseVtt(input);
+    const elapsedMs = performance.now() - start;
+
+    expect(elapsedMs).toBeLessThan(50);
+    expect(transcript.cues[0]?.speaker).toBeUndefined();
+  });
+
+  it('skips a cue whose end precedes its start (reversed timing)', () => {
+    const input = [
+      'WEBVTT',
+      '',
+      '00:00:01.000 --> 00:00:04.000',
+      'Valid before',
+      '',
+      '00:00:05.000 --> 00:00:01.000',
+      'Reversed cue',
+      '',
+      '00:00:06.000 --> 00:00:08.000',
+      'Valid after',
+    ].join('\n');
+
+    const transcript = parseVtt(input);
+
+    expect(transcript.cues.map((c) => c.text)).toEqual([
+      'Valid before',
+      'Valid after',
+    ]);
+    expect(transcript.cues.map((c) => c.index)).toEqual([1, 2]);
+  });
 });
