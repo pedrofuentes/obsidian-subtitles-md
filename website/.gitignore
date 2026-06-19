@@ -1,0 +1,4 @@
+# The repository root .gitignore excludes built plugin output named "main.js"
+# (it is attached to GitHub releases, not committed). The file below is the
+# website's own source script, so it must be tracked and published to Pages.
+!main.js

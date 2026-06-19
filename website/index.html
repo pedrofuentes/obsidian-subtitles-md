@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.className = d.className.replace('no-js', 'js');
+      // Safety net: if main.js fails to load, never leave reveal content hidden.
+      window.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
+          if (!window.__revealReady) {
+            var els = document.querySelectorAll('[data-reveal]');
+            for (var i = 0; i < els.length; i++) els[i].classList.add('is-visible');
+          }
+        }, 1400);
+      });
+    })();
+  </script>
+
+  <title>Subtitles MD: Read .srt and .vtt transcripts as searchable Markdown in Obsidian</title>
+  <meta name="description" content="Subtitles MD is a reading-first Obsidian plugin that renders .srt and .vtt subtitle files as clean, searchable Markdown. No media playback. Local-first and open source.">
+  <link rel="canonical" href="https://pedrofuent.es/obsidian-subtitles-md/">
+  <meta name="theme-color" content="#fcf7f0">
+  <meta name="color-scheme" content="light">
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Subtitles MD: read transcripts as searchable Markdown in Obsidian">
+  <meta property="og:description" content="A reading-first Obsidian plugin that turns .srt and .vtt subtitle files into clean, searchable, linkable Markdown. No playback required.">
+  <meta property="og:url" content="https://pedrofuent.es/obsidian-subtitles-md/">
+  <meta property="og:image" content="https://pedrofuent.es/obsidian-subtitles-md/assets/code-block.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="Obsidian reading view showing a transcript code block rendered as clean Markdown paragraphs.">
+  <meta property="og:site_name" content="Subtitles MD">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Subtitles MD: read transcripts as searchable Markdown in Obsidian">
+  <meta name="twitter:description" content="A reading-first Obsidian plugin that turns .srt and .vtt subtitle files into clean, searchable Markdown. No playback required.">
+  <meta name="twitter:image" content="https://pedrofuent.es/obsidian-subtitles-md/assets/code-block.png">
+  <meta name="twitter:image:alt" content="Obsidian reading view showing a transcript code block rendered as clean Markdown paragraphs.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,600&family=Source+Code+Pro:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top">
+          <img src="assets/favicon.svg" alt="" width="26" height="26">
+          Subtitles MD
+        </a>
+        <span class="nav__spacer"></span>
+        <div class="nav__links">
+          <a href="#features">Features</a>
+          <a href="#see-it">See it</a>
+          <a href="#usage">How it works</a>
+          <a href="#settings">Settings</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="nav__cta">
+          <a class="ghost-link" href="https://github.com/pedrofuentes/obsidian-subtitles-md">GitHub</a>
+          <a class="btn btn--primary" href="https://github.com/pedrofuentes/obsidian-subtitles-md#installation">Get it</a>
+        </div>
+        <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </nav>
+      <div class="nav__menu" id="nav-menu">
+        <a href="#features">Features</a>
+        <a href="#see-it">See it</a>
+        <a href="#usage">How it works</a>
+        <a href="#settings">Settings</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/pedrofuentes/obsidian-subtitles-md">View on GitHub</a>
+        <a class="btn btn--primary" href="https://github.com/pedrofuentes/obsidian-subtitles-md#installation">Get it</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ===================== hero ===================== -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <p class="hero__overline" data-reveal>
+            <span class="tc">00:00:00</span>&nbsp;&nbsp;Subtitles&nbsp;MD
+          </p>
+          <h1 id="hero-title" data-reveal data-reveal-delay="1">
+            Read <span class="mono">.srt</span> and <span class="mono">.vtt</span> transcripts like <em>prose</em>.
+          </h1>
+          <p class="hero__lead" data-reveal data-reveal-delay="2">
+            Subtitles MD renders subtitle files as searchable Markdown in Obsidian. No playback required, just comfortable, linkable text.
+          </p>
+          <p class="hero__sub" data-reveal data-reveal-delay="2">
+            Built for researchers, students, and note-takers who keep lectures, interviews, and talks in their vault.
+          </p>
+          <div class="hero__cta" data-reveal data-reveal-delay="3">
+            <a class="btn btn--primary btn--lg" href="https://github.com/pedrofuentes/obsidian-subtitles-md#installation">
+              Get it
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn--ghost btn--lg" href="https://github.com/pedrofuentes/obsidian-subtitles-md">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 6.84 9.5c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85l-.01 2.75c0 .27.18.58.69.48A10 10 0 0 0 22 12 10 10 0 0 0 12 2Z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+          <p class="hero__meta" data-reveal data-reveal-delay="3">
+            <span><span class="dot"></span> .srt &amp; .vtt</span>
+            <span><span class="dot"></span> Local-first</span>
+            <span><span class="dot"></span> MIT licensed</span>
+          </p>
+        </div>
+
+        <div class="hero__art" data-reveal data-reveal-delay="2">
+          <figure class="frame">
+            <div class="frame__bar">
+              <span class="frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="frame__label">talk.srt&nbsp;&nbsp;·&nbsp;&nbsp;reading view</span>
+            </div>
+            <img src="assets/code-block.png" width="1280" height="900" fetchpriority="high" decoding="async"
+                 alt="Obsidian in reading view: a transcript code block rendered as comfortable Markdown paragraphs, with timestamps shown as quiet inline markers.">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== features ===================== -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow"><span class="tc">00:00:24</span><span class="label">features</span></p>
+          <h2 id="features-title">A reading tool, not a media player</h2>
+          <p>Four things Subtitles MD does well, so transcripts behave like every other note in your vault.</p>
+        </div>
+
+        <div class="features">
+          <article class="feature feature--lead" data-reveal>
+            <span class="feature__idx">01 / convert</span>
+            <h3>One command to a clean note</h3>
+            <p>Run <strong>Convert subtitle file to transcript note</strong> on any <code>.srt</code> or <code>.vtt</code> file. Subtitles MD reflows the cues into readable paragraphs and writes a new Markdown note beside the original. The source file stays untouched.</p>
+            <p class="feature__note"><b>⌘/Ctrl + P</b><span class="feature__arrow" aria-hidden="true">→</span><span class="feature__cmd">Convert subtitle file to transcript note</span></p>
+          </article>
+
+          <article class="feature feature--b" data-reveal data-reveal-delay="1">
+            <span class="feature__idx">02 / embed</span>
+            <h3>A <code>transcript</code> code block</h3>
+            <p>Drop a <code>```transcript</code> block into any note. Paste subtitle text inline, or point at a file with <code>file:&nbsp;path/to/sub.srt</code>. It renders as paragraphs in reading view.</p>
+          </article>
+
+          <article class="feature feature--c" data-reveal>
+            <span class="feature__idx">03 / read</span>
+            <h3>Read without converting</h3>
+            <p>Click any <code>.srt</code> or <code>.vtt</code> in your vault to open it in a calm, read-only transcript view. Nothing is rewritten, nothing is generated.</p>
+          </article>
+
+          <article class="feature feature--d" data-reveal data-reveal-delay="1">
+            <span class="feature__idx">04 / shape</span>
+            <h3>Formatting on your terms</h3>
+            <p>Decide how cues group into paragraphs and how timestamps, speakers, and frontmatter appear. Six settings, sensible defaults, and everything stays on your machine.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== see it ===================== -->
+    <section class="section" id="see-it" style="background: var(--paper-2);" aria-labelledby="see-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow"><span class="tc">00:00:58</span><span class="label">see it</span></p>
+          <h2 id="see-title">Four captures from a real vault</h2>
+          <p>Read, open, convert, and tune. The plugin renders dark; the screens sit here like plates in a book.</p>
+        </div>
+
+        <div class="shots">
+          <article class="shot" data-reveal>
+            <figure class="frame">
+              <div class="frame__bar"><span class="frame__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="frame__label">talk.srt&nbsp;&nbsp;·&nbsp;&nbsp;reading view</span></div>
+              <img src="assets/code-block.png" width="1280" height="900" loading="lazy" decoding="async"
+                   alt="An Obsidian note in reading view with a transcript code block rendered as clean paragraphs; timestamps appear as quiet inline markers.">
+            </figure>
+            <div class="shot__text">
+              <p class="tc">00:01:00</p>
+              <h3>Reading view</h3>
+              <p>A <code>```transcript</code> block rendered as readable paragraphs. Timestamps stay as quiet markers, and the text is fully searchable.</p>
+            </div>
+          </article>
+
+          <article class="shot" data-reveal>
+            <figure class="frame">
+              <div class="frame__bar"><span class="frame__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="frame__label">interview.vtt&nbsp;&nbsp;·&nbsp;&nbsp;read-only</span></div>
+              <img src="assets/file-view.png" width="1280" height="900" loading="lazy" decoding="async"
+                   alt="A .vtt subtitle file opened directly in Obsidian as a read-only transcript view, with no conversion performed.">
+            </figure>
+            <div class="shot__text">
+              <p class="tc">00:01:09</p>
+              <h3>Read-only file view</h3>
+              <p>Open a <code>.srt</code> or <code>.vtt</code> straight from the file explorer. The original is never modified; you just read it.</p>
+            </div>
+          </article>
+
+          <article class="shot" data-reveal>
+            <figure class="frame">
+              <div class="frame__bar"><span class="frame__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="frame__label">lecture.md&nbsp;&nbsp;·&nbsp;&nbsp;converted note</span></div>
+              <img src="assets/converted-note.png" width="1280" height="900" loading="lazy" decoding="async"
+                   alt="A Markdown note created by Subtitles MD, showing YAML frontmatter followed by the transcript as readable paragraphs.">
+            </figure>
+            <div class="shot__text">
+              <p class="tc">00:01:18</p>
+              <h3>Converted note</h3>
+              <p>The convert command writes a first-class Markdown note, frontmatter and all, ready for <code>[[wikilinks]]</code> and annotation.</p>
+            </div>
+          </article>
+
+          <article class="shot" data-reveal>
+            <figure class="frame">
+              <div class="frame__bar"><span class="frame__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="frame__label">Settings&nbsp;&nbsp;·&nbsp;&nbsp;Subtitles MD</span></div>
+              <img src="assets/settings.png" width="1280" height="900" loading="lazy" decoding="async"
+                   alt="The Subtitles MD settings panel in Obsidian, with options for timestamps, frontmatter, speaker style, and paragraph behaviour.">
+            </figure>
+            <div class="shot__text">
+              <p class="tc">00:01:27</p>
+              <h3>Settings</h3>
+              <p>Tune reflow, timestamps, speakers, and frontmatter to taste. Sensible defaults mean you rarely need to.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== usage ===================== -->
+    <section class="section" id="usage" aria-labelledby="usage-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow"><span class="tc">00:01:30</span><span class="label">how it works</span></p>
+          <h2 id="usage-title">Three ways in</h2>
+          <p>Embed a transcript, reference a file, or convert one to a note. All in plain Markdown.</p>
+        </div>
+
+        <div class="usage-grid">
+          <div class="codecard" data-reveal>
+            <div class="codecard__head">
+              <span class="tc">00:01:38</span>
+              <span class="name">Paste subtitle text inline</span>
+            </div>
+            <pre aria-label="Example of an inline transcript code block"><code><span class="fence">```transcript</span>
+1
+<span class="time">00:00:01,000 --&gt; 00:00:03,500</span>
+Welcome to the demo.
+
+2
+<span class="time">00:00:04,000 --&gt; 00:00:06,800</span>
+This is a sample subtitle block.
+<span class="fence">```</span></code></pre>
+            <p class="codecard__foot">Renders as clean paragraphs in reading view, with timestamps kept as quiet markers.</p>
+          </div>
+
+          <div class="codecard" data-reveal data-reveal-delay="1">
+            <div class="codecard__head">
+              <span class="tc">00:01:48</span>
+              <span class="name">Reference a file in your vault</span>
+            </div>
+            <pre aria-label="Example of a transcript code block referencing a file"><code><span class="fence">```transcript</span>
+<span class="key">file:</span> Recordings/talk.srt
+<span class="fence">```</span></code></pre>
+            <p class="codecard__foot">Keeps the transcript in one place and embeds it wherever you need it with <code>file:</code>.</p>
+          </div>
+
+          <div class="codecard" data-reveal data-reveal-delay="1">
+            <div class="codecard__head">
+              <span class="tc">00:01:58</span>
+              <span class="name">Convert, or just open</span>
+            </div>
+            <div class="palette">
+              <span class="kbd">⌘ / Ctrl</span><span class="kbd">P</span>
+              <span class="arrow" aria-hidden="true">→</span>
+              <span class="cmd">Convert subtitle file to transcript note</span>
+            </div>
+            <p class="codecard__foot">Or click any <code>.srt</code> / <code>.vtt</code> in the file explorer to read it in place, no conversion needed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== settings ===================== -->
+    <section class="section" id="settings" style="background: var(--paper-2);" aria-labelledby="settings-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow"><span class="tc">00:02:05</span><span class="label">settings</span></p>
+          <h2 id="settings-title">Settings, and their defaults</h2>
+          <p>Everything is configurable, and configured sensibly out of the box.</p>
+        </div>
+
+        <dl class="settings" data-reveal>
+          <div class="setting">
+            <dt class="setting__name">Timestamps</dt>
+            <dd class="setting__desc">How cue timestamps are rendered in the transcript.<span class="opts">None · Inline · Aside</span></dd>
+            <span class="chip">Inline</span>
+          </div>
+          <div class="setting">
+            <dt class="setting__name">Include frontmatter</dt>
+            <dd class="setting__desc">Add a YAML frontmatter block with source metadata to converted notes.<span class="opts">On · Off</span></dd>
+            <span class="chip">On</span>
+          </div>
+          <div class="setting">
+            <dt class="setting__name">Speaker style</dt>
+            <dd class="setting__desc">Render speaker labels as bold text or as headings.<span class="opts">Bold · Heading</span></dd>
+            <span class="chip">Bold</span>
+          </div>
+          <div class="setting">
+            <dt class="setting__name">New paragraph on speaker change</dt>
+            <dd class="setting__desc">Start a fresh paragraph whenever the speaker changes.<span class="opts">On · Off</span></dd>
+            <span class="chip">On</span>
+          </div>
+          <div class="setting">
+            <dt class="setting__name">Split on sentence end</dt>
+            <dd class="setting__desc">Force a paragraph break at sentence boundaries.<span class="opts">On · Off</span></dd>
+            <span class="chip">Off</span>
+          </div>
+          <div class="setting">
+            <dt class="setting__name">Paragraph gap threshold</dt>
+            <dd class="setting__desc">Minimum silence between cues before a new paragraph begins.<span class="opts">milliseconds</span></dd>
+            <span class="chip"><span class="k">ms</span>&nbsp;2000</span>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ===================== faq ===================== -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow"><span class="tc">00:02:38</span><span class="label">faq</span></p>
+          <h2 id="faq-title">Questions</h2>
+        </div>
+
+        <div class="faq" data-reveal>
+          <details>
+            <summary>Which formats are supported?<span class="mark" aria-hidden="true"></span></summary>
+            <div class="faq__body"><p><code>.srt</code> (SubRip) and <code>.vtt</code> (WebVTT), including transcripts exported from most lecture, meeting, and captioning tools.</p></div>
+          </details>
+          <details>
+            <summary>Does it play video or audio?<span class="mark" aria-hidden="true"></span></summary>
+            <div class="faq__body"><p>No, and that is the point. Subtitles MD is reading-first: it renders subtitle text as Markdown so you can read, search, and annotate it. There is no media player to manage.</p></div>
+          </details>
+          <details>
+            <summary>Does my data stay on my machine?<span class="mark" aria-hidden="true"></span></summary>
+            <div class="faq__body"><p>Yes. Everything runs locally inside your vault. No accounts, no servers, no network requests. Your transcripts never leave your device.</p></div>
+          </details>
+          <details>
+            <summary>Will it change my original files?<span class="mark" aria-hidden="true"></span></summary>
+            <div class="faq__body"><p>No. The read-only view and the <code>transcript</code> code block leave your <code>.srt</code> and <code>.vtt</code> files untouched. Converting creates a new note beside the source.</p></div>
+          </details>
+          <details>
+            <summary>Is it open source?<span class="mark" aria-hidden="true"></span></summary>
+            <div class="faq__body"><p>Yes, released under the MIT license. Read the source, file an issue, or send a pull request on <a href="https://github.com/pedrofuentes/obsidian-subtitles-md">GitHub</a>.</p></div>
+          </details>
+          <details>
+            <summary>How do I install it?<span class="mark" aria-hidden="true"></span></summary>
+            <div class="faq__body"><p>Build or download the release assets and drop them into your vault's plugins folder, or wait for the Community Plugins listing once review is complete. Full steps live in the <a href="https://github.com/pedrofuentes/obsidian-subtitles-md#installation">README</a>.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== closing ===================== -->
+    <section class="section section--tight" aria-labelledby="closing-title">
+      <div class="wrap">
+        <div class="closing" data-reveal>
+          <p class="eyebrow"><span class="tc">00:03:10</span></p>
+          <h2 id="closing-title">Bring your transcripts in to read.</h2>
+          <p>Free and open source. Install from GitHub today, or from Community Plugins once it clears review.</p>
+          <div class="closing__cta">
+            <a class="btn btn--primary btn--lg" href="https://github.com/pedrofuentes/obsidian-subtitles-md#installation">
+              Get it
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn--on-dark btn--lg" href="https://github.com/pedrofuentes/obsidian-subtitles-md">View on GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a class="brand" href="#top"><img src="assets/favicon.svg" alt="" width="26" height="26"> Subtitles MD</a>
+          <p>Reading-first transcripts for Obsidian. Turn <code>.srt</code> and <code>.vtt</code> files into searchable, linkable Markdown.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Project</h4>
+          <ul>
+            <li><a href="https://github.com/pedrofuentes/obsidian-subtitles-md">GitHub repository</a></li>
+            <li><a href="https://github.com/pedrofuentes/obsidian-subtitles-md/releases">Releases</a></li>
+            <li><a href="https://github.com/pedrofuentes/obsidian-subtitles-md/issues">Issues</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>On this page</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#usage">How it works</a></li>
+            <li><a href="#settings">Settings</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>MIT License&nbsp;&nbsp;·&nbsp;&nbsp;© 2026 Pedro Fuentes</span>
+        <span class="built"><span class="tc">[00:00:00]</span> Built for Obsidian</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
