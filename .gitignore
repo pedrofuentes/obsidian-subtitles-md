@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output — main.js is attached to GitHub releases, not committed
+main.js
+*.js.map
+
+# Obsidian plugin local data
+data.json
+
+# Agent workflow
+.worktrees/
+
+# OS / editor
+.DS_Store
+*.iml
+.idea/
