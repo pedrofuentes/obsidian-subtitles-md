@@ -5,6 +5,9 @@ node_modules/
 main.js
 *.js.map
 
+# Test coverage
+coverage/
+
 # Obsidian plugin local data
 data.json
 

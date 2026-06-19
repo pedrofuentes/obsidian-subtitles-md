@@ -1,0 +1,33 @@
+{
+  "name": "obsidian-subtitles-md",
+  "version": "0.1.0",
+  "description": "An Obsidian plugin that reads .srt/.vtt transcripts as readable, searchable Markdown.",
+  "main": "main.js",
+  "type": "module",
+  "packageManager": "pnpm@10.30.1",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit --skipLibCheck && node esbuild.config.mjs production",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "Pedro Fuentes",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "@types/node": "^22",
+    "@vitest/coverage-v8": "^3",
+    "esbuild": "^0.25",
+    "eslint": "^9",
+    "eslint-plugin-obsidianmd": "^0.3",
+    "globals": "^16",
+    "obsidian": "latest",
+    "typescript": "^5.8",
+    "typescript-eslint": "^8",
+    "vitest": "^3"
+  }
+}
