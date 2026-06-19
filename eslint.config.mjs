@@ -5,7 +5,7 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['main.js', 'node_modules/', '.worktrees/', 'coverage/', 'e2e/**', 'wdio.conf.mts', '.obsidian-cache/', 'test-vault/.obsidian/'],
+    ignores: ['main.js', 'node_modules/', '.worktrees/', 'coverage/', 'e2e/**', 'wdio.conf.mts', 'wdio.capture.mts', '.obsidian-cache/', 'test-vault/.obsidian/'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
