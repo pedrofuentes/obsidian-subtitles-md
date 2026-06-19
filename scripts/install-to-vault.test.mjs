@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { resolveVaultPath, withPluginEnabled } from './install-to-vault.mjs';
+import { mkdtempSync, existsSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { resolveVaultPath, withPluginEnabled, copyPluginFiles } from './install-to-vault.mjs';
 
 describe('resolveVaultPath', () => {
 	it('should prioritize --vault argument over env and default', () => {
@@ -87,5 +90,35 @@ describe('withPluginEnabled', () => {
 		const result = withPluginEnabled('{malformed', pluginId);
 		const parsed = JSON.parse(result);
 		expect(parsed).toEqual([pluginId]);
+	});
+});
+
+describe('copyPluginFiles pre-flight check', () => {
+	it('should throw when a source file is missing and not copy anything', () => {
+		const testDir = mkdtempSync(join(tmpdir(), 'install-test-'));
+		
+		try {
+			// Create a fake repo root with only manifest.json and styles.css (missing main.js)
+			const fakeRepo = join(testDir, 'repo');
+			const fakeVault = join(testDir, 'vault');
+			const pluginDir = join(fakeVault, '.obsidian', 'plugins', 'obsidian-subtitles-md');
+			
+			mkdirSync(fakeRepo, { recursive: true });
+			mkdirSync(pluginDir, { recursive: true });
+			
+			writeFileSync(join(fakeRepo, 'manifest.json'), '{}');
+			writeFileSync(join(fakeRepo, 'styles.css'), '');
+			// main.js intentionally missing
+
+			// Should throw without copying anything
+			expect(() => copyPluginFiles(fakeRepo, pluginDir)).toThrow();
+			
+			// Verify no files were copied to destination
+			expect(existsSync(join(pluginDir, 'manifest.json'))).toBe(false);
+			expect(existsSync(join(pluginDir, 'main.js'))).toBe(false);
+			expect(existsSync(join(pluginDir, 'styles.css'))).toBe(false);
+		} finally {
+			rmSync(testDir, { recursive: true, force: true });
+		}
 	});
 });
