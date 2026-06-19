@@ -92,6 +92,52 @@ pnpm run typecheck # Type-check with tsc
 
 This project follows a **test-driven development** workflow with **Sentinel review** before merging. See [`AGENTS.md`](./AGENTS.md) for details.
 
+### Testing in a Real Vault
+
+The `install:vault` command builds the plugin and installs it into an Obsidian vault. The target vault is resolved in order of precedence:
+
+1. **`--vault <path>`** — command-line argument (supports `--vault path` or `--vault=path`)
+2. **`OBSIDIAN_VAULT`** — environment variable
+3. **`test-vault/`** — the demo vault committed to this repo
+
+**Quick start with the bundled demo vault:**
+
+```bash
+pnpm install:vault
+```
+
+Then open `test-vault/` in Obsidian, reload with Ctrl+R, and enable **Subtitles MD** in Settings → Community plugins. Try opening `Recordings/talk.srt` or `Demo.md` in reading view.
+
+**Install to your own vault:**
+
+```bash
+pnpm install:vault --vault "C:\path\to\YourVault"
+# or
+export OBSIDIAN_VAULT="C:\path\to\YourVault"  # Unix/macOS
+set OBSIDIAN_VAULT=C:\path\to\YourVault       # Windows cmd
+$env:OBSIDIAN_VAULT="C:\path\to\YourVault"    # Windows PowerShell
+pnpm install:vault
+```
+
+**Live development loop:**
+
+1. Create a symlink from your vault to the repository (one-time setup):
+   ```powershell
+   # Windows PowerShell
+   New-Item -ItemType SymbolicLink -Path "<vault>\.obsidian\plugins\obsidian-subtitles-md" -Target "<repo>"
+   ```
+   ```bash
+   # Unix/macOS
+   ln -s /path/to/repo /path/to/vault/.obsidian/plugins/obsidian-subtitles-md
+   ```
+
+2. Run the dev watcher to rebuild on changes:
+   ```bash
+   pnpm dev
+   ```
+
+3. Reload Obsidian (Ctrl+R) to pick up changes, or install the community **Hot Reload** plugin for automatic reloading.
+
 ## Contributing
 
 See [`AGENTS.md`](./AGENTS.md) and [`docs/DEVELOPMENT-WORKFLOW.md`](./docs/DEVELOPMENT-WORKFLOW.md) for workflow, testing, and contribution guidelines.

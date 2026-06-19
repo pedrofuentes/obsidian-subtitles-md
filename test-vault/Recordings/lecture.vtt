@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00:01.000 --> 00:00:04.500
+<v Dr. Smith>Welcome to Introduction to Computer Science, lecture five.
+
+00:00:05.000 --> 00:00:09.200
+<v Dr. Smith>Today we'll explore data structures and their applications.
+
+00:00:10.000 --> 00:00:14.800
+<v Student>Dr. Smith, could you explain the difference between arrays and linked lists?
+
+00:00:15.500 --> 00:00:20.000
+<v Dr. Smith>Excellent question! Arrays store elements in contiguous memory locations.
+
+00:00:20.500 --> 00:00:25.300
+<v Dr. Smith>Linked lists, on the other hand, use pointers to connect elements dynamically.

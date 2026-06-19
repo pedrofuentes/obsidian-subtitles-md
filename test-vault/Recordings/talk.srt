@@ -1,0 +1,27 @@
+1
+00:00:01,000 --> 00:00:03,500
+Alice: Hello everyone, welcome to today's discussion.
+
+2
+00:00:04,000 --> 00:00:08,200
+Bob: Thanks for joining us. We'll be exploring some fascinating topics.
+
+3
+00:00:10,500 --> 00:00:14,800
+Alice: Let's start with the fundamentals and build from there.
+
+4
+00:00:15,200 --> 00:00:19,000
+Charlie: I've prepared some examples that should help clarify things.
+
+5
+00:00:21,500 --> 00:00:25,300
+Bob: Great! This will really help our audience understand the concepts.
+
+6
+00:00:27,800 --> 00:00:32,000
+Alice: Remember to check the documentation for additional resources.
+
+7
+00:00:32,500 --> 00:00:36,500
+Charlie: And feel free to reach out if you have any questions afterward.

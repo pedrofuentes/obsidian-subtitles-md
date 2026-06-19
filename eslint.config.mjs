@@ -5,7 +5,7 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['main.js', 'node_modules/', '.worktrees/', 'coverage/', 'e2e/**', 'wdio.conf.mts', '.obsidian-cache/'],
+    ignores: ['main.js', 'node_modules/', '.worktrees/', 'coverage/', 'e2e/**', 'wdio.conf.mts', '.obsidian-cache/', 'test-vault/.obsidian/'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -44,6 +44,7 @@ export default tseslint.config(
       'obsidianmd/no-unsupported-api': 'off',
       'obsidianmd/prefer-file-manager-trash-file': 'off',
       'obsidianmd/prefer-instanceof': 'off',
+      'obsidianmd/hardcoded-config-path': 'off',
     },
   },
 );
