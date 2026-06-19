@@ -42,6 +42,30 @@ export function withPluginEnabled(existingJson, id = 'obsidian-subtitles-md') {
 	return JSON.stringify(plugins, null, 2) + '\n';
 }
 
+export function copyPluginFiles(repoRoot, pluginDir) {
+	const filesToCopy = ['manifest.json', 'main.js', 'styles.css'];
+	
+	// Pre-flight: check all sources exist BEFORE copying anything
+	const missing = [];
+	for (const file of filesToCopy) {
+		const source = join(repoRoot, file);
+		if (!existsSync(source)) {
+			missing.push(file);
+		}
+	}
+	
+	if (missing.length > 0) {
+		throw new Error(`Missing source file(s): ${missing.join(', ')}`);
+	}
+	
+	// All sources exist - safe to copy
+	for (const file of filesToCopy) {
+		const source = join(repoRoot, file);
+		const dest = join(pluginDir, file);
+		copyFileSync(source, dest);
+	}
+}
+
 function main() {
 	const vaultPath = resolveVaultPath({ argv: process.argv, env: process.env });
 	const absoluteVaultPath = resolve(vaultPath);
@@ -57,18 +81,14 @@ function main() {
 	mkdirSync(pluginDir, { recursive: true });
 
 	const repoRoot = process.cwd();
-	const filesToCopy = ['manifest.json', 'main.js', 'styles.css'];
 	
-	for (const file of filesToCopy) {
-		const source = join(repoRoot, file);
-		if (!existsSync(source)) {
-			console.error(`Error: ${file} not found in repository root.`);
-			console.error('Run "pnpm run build" first to generate main.js');
-			process.exit(1);
-		}
-		const dest = join(pluginDir, file);
-		copyFileSync(source, dest);
-		console.log(`Copied ${file} → ${pluginDir}`);
+	try {
+		copyPluginFiles(repoRoot, pluginDir);
+		console.log(`Copied manifest.json, main.js, styles.css → ${pluginDir}`);
+	} catch (error) {
+		console.error(`Error: ${error.message}`);
+		console.error('Run "pnpm run build" first to generate main.js');
+		process.exit(1);
 	}
 
 	const communityPluginsPath = join(absoluteVaultPath, '.obsidian', 'community-plugins.json');
