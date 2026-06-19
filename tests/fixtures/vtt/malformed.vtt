@@ -1,0 +1,17 @@
+NOT A WEBVTT FILE
+
+00:00:01.000 --> 00:00:03.500
+Missing proper header!
+
+WEBVTT
+
+00:00:04,000 -> 00:00:06.000
+Bad arrow in timestamp.
+
+00:00:07.000 --> invalid
+Malformed end timestamp.
+
+00:00:10.000 --> 00:00:12.000
+
+00:00:13.000 --> 00:00:15.000
+Empty cue text above.

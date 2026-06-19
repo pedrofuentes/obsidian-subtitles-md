@@ -1,0 +1,15 @@
+1
+00:00:01,000 --> 00:00:03,000
+First subtitle appears.
+
+2
+00:00:05,500 --> 00:00:08,000
+Gap before this one (no subtitle from 3s to 5.5s).
+
+3
+00:00:07,000 --> 00:00:09,500
+This overlaps with the previous one!
+
+4
+00:00:12,000 --> 00:00:14,500
+Another gap before this subtitle.

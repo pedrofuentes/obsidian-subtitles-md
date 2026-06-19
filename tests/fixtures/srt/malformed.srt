@@ -1,0 +1,21 @@
+1
+00:00:01,000 --> 00:00:03,000
+This cue is fine.
+
+2
+00:00:04,000 -> 00:00:06,000
+Bad arrow in timestamp.
+
+00:00:07,000 --> 00:00:09,000
+Missing sequence number!
+
+4
+invalid timestamp format
+This has a malformed timestamp line.
+
+5
+00:00:10,000 --> 00:00:12,000
+
+6
+00:00:13,000 --> 00:00:15,000
+Empty text cue above this one.

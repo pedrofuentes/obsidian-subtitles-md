@@ -1,0 +1,11 @@
+﻿1
+00:00:01,000 --> 00:00:03,500
+This file uses CRLF line endings.
+
+2
+00:00:04,000 --> 00:00:07,000
+Each line ends with carriage return and line feed.
+
+3
+00:00:08,000 --> 00:00:10,500
+Parsers should handle both LF and CRLF.
