@@ -35,27 +35,45 @@ const SRT_TIMING_RE =
 const SRT_INDEX_RE = /^\d+$/;
 
 /**
- * Detect whether `input` looks like an SRT document: a numeric index line
- * immediately followed by an SRT timing line, ignoring blank lines.
+ * Detect whether `input` looks like an SRT document. Two signatures are
+ * accepted, ignoring blank lines:
+ *
+ * 1. A numeric index line immediately followed by an SRT timing line.
+ * 2. A leading SRT timing line followed by a non-empty text line — `parseSrt`
+ *    treats the index as optional, so index-less cues are valid SRT. The
+ *    following non-empty line is required to limit false positives.
  */
 function looksLikeSrt(lines: string[]): boolean {
-  for (let i = 0; i < lines.length; i += 1) {
-    const line = (lines[i] ?? '').trim();
-    if (line === '') {
-      continue;
-    }
-    if (!SRT_INDEX_RE.test(line)) {
-      return false;
-    }
-    // Find the next non-empty line; it must be a timing line.
+  let i = 0;
+  while (i < lines.length && (lines[i] ?? '').trim() === '') {
+    i += 1;
+  }
+  if (i >= lines.length) {
+    return false;
+  }
+
+  const first = (lines[i] ?? '').trim();
+
+  // Signature 2: a leading timing line, requiring a following text line.
+  if (SRT_TIMING_RE.test(first)) {
     for (let j = i + 1; j < lines.length; j += 1) {
-      const next = (lines[j] ?? '').trim();
-      if (next === '') {
-        continue;
+      if ((lines[j] ?? '').trim() !== '') {
+        return true;
       }
-      return SRT_TIMING_RE.test(next);
     }
     return false;
+  }
+
+  // Signature 1: a numeric index line followed by a timing line.
+  if (!SRT_INDEX_RE.test(first)) {
+    return false;
+  }
+  for (let j = i + 1; j < lines.length; j += 1) {
+    const next = (lines[j] ?? '').trim();
+    if (next === '') {
+      continue;
+    }
+    return SRT_TIMING_RE.test(next);
   }
   return false;
 }
@@ -78,8 +96,9 @@ function formatFromFilename(filename: string): SubtitleFormat | null {
  * Detection order:
  * 1. Strip a leading BOM.
  * 2. If the first non-empty line starts with `WEBVTT` → `'vtt'`.
- * 3. Else if the content carries an SRT signature (index line followed by an
- *    `HH:MM:SS,mmm --> HH:MM:SS,mmm` timing line) → `'srt'`.
+ * 3. Else if the content carries an SRT signature — an index line followed by
+ *    an `HH:MM:SS,mmm --> HH:MM:SS,mmm` timing line, or a leading timing line
+ *    followed by a non-empty text line — → `'srt'`.
  * 4. Else, if `filename` is given, fall back to its extension.
  * 5. Otherwise `null`.
  *

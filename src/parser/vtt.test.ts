@@ -281,6 +281,55 @@ describe('parseVtt', () => {
     expect(transcript.cues[0]?.speaker).toBeUndefined();
   });
 
+  it('rejects a cue whose minutes component is 60 or greater (issue #19)', () => {
+    const input = [
+      'WEBVTT',
+      '',
+      '00:00:01.000 --> 00:00:02.000',
+      'Valid before',
+      '',
+      '00:61:00.000 --> 00:62:00.000',
+      'Out-of-range minutes',
+      '',
+      '00:00:03.000 --> 00:00:04.000',
+      'Valid after',
+    ].join('\n');
+
+    const transcript = parseVtt(input);
+
+    expect(transcript.cues.map((c) => c.text)).toEqual([
+      'Valid before',
+      'Valid after',
+    ]);
+    expect(transcript.cues.map((c) => c.index)).toEqual([1, 2]);
+  });
+
+  it('rejects out-of-range minutes in the MM:SS.mmm short form (issue #19)', () => {
+    const input = ['WEBVTT', '', '60:00.000 --> 61:00.000', 'Bad minutes'].join(
+      '\n',
+    );
+
+    const transcript = parseVtt(input);
+
+    expect(transcript.cues).toHaveLength(0);
+  });
+
+  it('accepts a zero-duration cue where end equals start (issue #19)', () => {
+    const input = [
+      'WEBVTT',
+      '',
+      '00:00:01.000 --> 00:00:01.000',
+      'Zero length',
+    ].join('\n');
+
+    const transcript = parseVtt(input);
+
+    expect(transcript.cues).toHaveLength(1);
+    expect(transcript.cues[0]?.startMs).toBe(1000);
+    expect(transcript.cues[0]?.endMs).toBe(1000);
+    expect(transcript.cues[0]?.text).toBe('Zero length');
+  });
+
   it('skips a cue whose end precedes its start (reversed timing)', () => {
     const input = [
       'WEBVTT',

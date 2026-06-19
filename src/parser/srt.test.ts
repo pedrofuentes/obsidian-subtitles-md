@@ -186,5 +186,45 @@ describe('parseSrt', () => {
     expect(() => parseSrt('not subtitles at all\njust random text')).not.toThrow();
     expect(parseSrt('not subtitles at all\njust random text').cues).toEqual([]);
   });
+
+  it('skips an orphan index/single-line block without throwing (issue #25)', () => {
+    const input = '1\n\n00:00:01,000 --> 00:00:02,000\nReal\n';
+
+    const transcript = parseSrt(input);
+
+    expect(transcript.cues).toHaveLength(1);
+    expect(transcript.cues[0]?.text).toBe('Real');
+    expect(transcript.cues[0]?.startMs).toBe(1000);
+  });
+
+  it('parses a dot-millisecond separator equal to comma-millis (issue #25)', () => {
+    const dot = ['1', '00:00:01.000 --> 00:00:02.500', 'Dotted', ''].join('\n');
+    const comma = ['1', '00:00:01,000 --> 00:00:02,500', 'Dotted', ''].join('\n');
+
+    const dotCue = parseSrt(dot).cues[0];
+    const commaCue = parseSrt(comma).cues[0];
+
+    expect(dotCue).toEqual(commaCue);
+    expect(dotCue?.startMs).toBe(1000);
+    expect(dotCue?.endMs).toBe(2500);
+  });
+
+  it('drops a reversed-timestamp cue where endMs precedes startMs (issue #25)', () => {
+    const input = [
+      '1',
+      '00:00:05,000 --> 00:00:01,000',
+      'Reversed',
+      '',
+      '2',
+      '00:00:06,000 --> 00:00:08,000',
+      'Valid',
+      '',
+    ].join('\n');
+
+    const transcript = parseSrt(input);
+
+    expect(transcript.cues).toHaveLength(1);
+    expect(transcript.cues[0]?.text).toBe('Valid');
+  });
 });
 
