@@ -43,7 +43,7 @@ describe('resolveVaultPath', () => {
 });
 
 describe('withPluginEnabled', () => {
-	const pluginId = 'obsidian-subtitles-md';
+	const pluginId = 'subtitles-md';
 
 	it('should add plugin id to null input', () => {
 		const result = withPluginEnabled(null, pluginId);
@@ -91,6 +91,12 @@ describe('withPluginEnabled', () => {
 		const parsed = JSON.parse(result);
 		expect(parsed).toEqual([pluginId]);
 	});
+
+	it('should default to subtitles-md when id is not provided', () => {
+		const result = withPluginEnabled('[]');
+		const parsed = JSON.parse(result);
+		expect(parsed).toEqual(['subtitles-md']);
+	});
 });
 
 describe('copyPluginFiles pre-flight check', () => {
@@ -101,7 +107,7 @@ describe('copyPluginFiles pre-flight check', () => {
 			// Create a fake repo root with only manifest.json and styles.css (missing main.js)
 			const fakeRepo = join(testDir, 'repo');
 			const fakeVault = join(testDir, 'vault');
-			const pluginDir = join(fakeVault, '.obsidian', 'plugins', 'obsidian-subtitles-md');
+			const pluginDir = join(fakeVault, '.obsidian', 'plugins', 'subtitles-md');
 			
 			mkdirSync(fakeRepo, { recursive: true });
 			mkdirSync(pluginDir, { recursive: true });

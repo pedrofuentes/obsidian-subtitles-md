@@ -23,7 +23,7 @@ Most subtitle/transcript plugins generate transcripts from audio (Whisper, YouTu
 ### Manual Install
 
 1. Download or build `main.js`, `manifest.json`, and `styles.css`.
-2. Place them in `<vault>/.obsidian/plugins/obsidian-subtitles-md/`.
+2. Place them in `<vault>/.obsidian/plugins/subtitles-md/`.
 3. Enable the plugin in Settings → Community plugins.
 
 ## Usage
@@ -124,11 +124,11 @@ pnpm install:vault
 1. Create a symlink from your vault to the repository (one-time setup):
    ```powershell
    # Windows PowerShell
-   New-Item -ItemType SymbolicLink -Path "<vault>\.obsidian\plugins\obsidian-subtitles-md" -Target "<repo>"
+   New-Item -ItemType SymbolicLink -Path "<vault>\.obsidian\plugins\subtitles-md" -Target "<repo>"
    ```
    ```bash
    # Unix/macOS
-   ln -s /path/to/repo /path/to/vault/.obsidian/plugins/obsidian-subtitles-md
+   ln -s /path/to/repo /path/to/vault/.obsidian/plugins/subtitles-md
    ```
 
 2. Run the dev watcher to rebuild on changes:

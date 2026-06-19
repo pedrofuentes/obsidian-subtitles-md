@@ -1,9 +1,10 @@
 {
-  "id": "obsidian-subtitles-md",
+  "id": "subtitles-md",
   "name": "Subtitles MD",
   "version": "0.1.0",
   "minAppVersion": "1.5.0",
   "description": "An Obsidian plugin that reads .srt/.vtt transcripts as readable, searchable Markdown.",
   "author": "Pedro Fuentes",
+  "authorUrl": "https://github.com/pedrofuentes",
   "isDesktopOnly": false
 }

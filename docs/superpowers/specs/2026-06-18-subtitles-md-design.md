@@ -3,7 +3,7 @@
 - **Status:** Approved (design) — ready for implementation planning
 - **Date:** 2026-06-18
 - **Authors:** Pedro Fuentes & Copilot (co-founders)
-- **Plugin id:** `obsidian-subtitles-md` · **Display name:** Subtitles MD
+- **Plugin id:** `subtitles-md` · **Display name:** Subtitles MD
 - **License:** MIT · **Stack:** TypeScript, pnpm, esbuild (CJS bundle), ESLint + eslint-plugin-obsidianmd, Vitest, wdio-obsidian-service
 
 ## 1. Summary

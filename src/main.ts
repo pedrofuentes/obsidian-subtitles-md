@@ -18,7 +18,7 @@ import {
 } from './settings';
 
 /**
- * Entry point for the obsidian-subtitles-md plugin.
+ * Entry point for the Subtitles MD plugin.
  *
  * Kept intentionally thin: it loads persisted settings and wires up the plugin's
  * surfaces — the "Convert subtitle file to transcript note" command, the

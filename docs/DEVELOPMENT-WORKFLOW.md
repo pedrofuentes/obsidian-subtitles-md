@@ -113,7 +113,7 @@ pnpm dev          # esbuild watch — rebuilds main.js on change
 
 ### Live-testing in Obsidian
 1. Create (or pick) a development vault you don't mind breaking.
-2. Symlink or copy this repo into `<vault>/.obsidian/plugins/obsidian-subtitles-md/`
+2. Symlink or copy this repo into `<vault>/.obsidian/plugins/subtitles-md/`
    so Obsidian loads your local `main.js`, `manifest.json`, and `styles.css`.
 3. Enable the plugin in Obsidian → Settings → Community plugins.
 4. Reload the plugin (or use the Hot-Reload community plugin) after each build.
