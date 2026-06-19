@@ -10,6 +10,32 @@ Read `.srt`/`.vtt` subtitle & transcript files as comfortable, searchable Markdo
 - **Configurable reflow & formatting** — control how cues are grouped into paragraphs, how timestamps and speakers are displayed, and whether to include frontmatter metadata — all via Settings.
 - **Pure Markdown output** — transcript text becomes first-class vault content: searchable via Obsidian's search, linkable with `[[wikilinks]]`, and ready for annotation.
 
+## Screenshots
+
+### Code Block Rendering
+
+![Transcript code block rendered in reading view](docs/images/code-block.png)
+
+A `transcript` code block renders inline subtitle content as clean, readable paragraphs in reading view.
+
+### Read-Only File View
+
+![Read-only .srt transcript view](docs/images/file-view.png)
+
+Click any `.srt` or `.vtt` file in your vault to open it as a readable transcript without converting it.
+
+### Converted Transcript Note
+
+![Converted transcript note with frontmatter and timestamps](docs/images/converted-note.png)
+
+The "Convert subtitle file to transcript note" command creates a Markdown note with frontmatter properties, timestamps, and formatted speakers.
+
+### Settings Tab
+
+![Plugin settings tab](docs/images/settings.png)
+
+Configure reflow behavior, timestamp display, speaker formatting, and frontmatter inclusion in the plugin's Settings tab.
+
 ## Why
 
 Most subtitle/transcript plugins generate transcripts from audio (Whisper, YouTube) or sync playback with media. **Subtitles MD** fills a different niche: it makes *existing* `.srt`/`.vtt` files comfortable to read and turns their text into native, searchable Markdown. Perfect for researchers, students, and anyone who needs to read, annotate, and link transcripts without requiring media playback.
@@ -18,7 +44,7 @@ Most subtitle/transcript plugins generate transcripts from audio (Whisper, YouTu
 
 ### Community Plugins (recommended)
 
-**Note:** Pending review. Once approved, search for "Subtitles MD" in Settings → Community plugins → Browse.
+**Note:** Pending review. Once approved, search for **Subtitles MD** in Settings → Community plugins → Browse.
 
 ### Manual Install
 
