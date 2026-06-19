@@ -28,7 +28,7 @@
     "@wdio/globals": "^9.29.0",
     "@wdio/local-runner": "^9.29.0",
     "@wdio/mocha-framework": "^9.29.0",
-    "esbuild": "^0.25",
+    "esbuild": "^0.28",
     "eslint": "^9",
     "eslint-plugin-obsidianmd": "^0.3",
     "globals": "^16",
