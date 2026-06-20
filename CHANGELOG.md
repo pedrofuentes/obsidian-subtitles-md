@@ -15,6 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Removed
 
+## [0.1.1] - 2026-06-19
+
+### Added
+
+- Build provenance attestations for release assets (`main.js`, `styles.css`, `manifest.json`), verifiable with `gh attestation verify`.
+
+### Changed
+
+- Plugin description rewritten as an action statement for the community directory listing.
+
 ## [0.1.0] - 2026-06-19
 
 ### Added

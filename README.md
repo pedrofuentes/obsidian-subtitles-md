@@ -52,6 +52,14 @@ Most subtitle/transcript plugins generate transcripts from audio (Whisper, YouTu
 2. Place them in `<vault>/.obsidian/plugins/subtitles-md/`.
 3. Enable the plugin in Settings → Community plugins.
 
+### Verifying Release Provenance
+
+Release binaries are built in GitHub Actions with [build provenance attestations](https://docs.github.com/actions/security-guides/using-artifact-attestations). Verify a downloaded asset with:
+
+```bash
+gh attestation verify main.js --repo pedrofuentes/obsidian-subtitles-md
+```
+
 ## Usage
 
 ### Convert a subtitle file to a note
