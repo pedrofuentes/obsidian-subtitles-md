@@ -70,6 +70,13 @@
   --shadow-lg: 0 10px 28px rgba(42, 33, 27, 0.11), 0 34px 66px rgba(42, 33, 27, 0.14);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1); /* ease-out-quint */
+
+  /* --- transition durations (CSS-variable motion control for a11y) --- */
+  --dur-fast: 0.2s;
+  --dur: 0.25s;
+  --dur-300: 0.3s;
+  --dur-slow: 0.7s;
+
   color-scheme: light;
 }
 
@@ -99,7 +106,7 @@ body {
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 
-a { color: var(--clay-strong); text-underline-offset: 0.18em; text-decoration-thickness: 0.06em; }
+a { color: var(--clay-strong); text-underline-offset: 0.18em; }
 a:hover { color: var(--clay-deep); }
 
 h1, h2, h3, h4 {
@@ -142,7 +149,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   border-radius: var(--r-s);
   font-weight: 600;
   transform: translateY(-160%);
-  transition: transform 0.2s var(--ease);
+  transition: transform var(--dur-fast) var(--ease);
 }
 .skip-link:focus { transform: translateY(0); color: var(--paper); }
 
@@ -186,7 +193,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   z-index: 50;
   background: oklch(0.978 0.010 78 / 0.86);
   border-bottom: 1px solid transparent;
-  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.3s var(--ease);
+  transition: border-color var(--dur-300) var(--ease), box-shadow var(--dur-300) var(--ease), background var(--dur-300) var(--ease);
 }
 @supports (backdrop-filter: blur(8px)) {
   .site-header { backdrop-filter: saturate(1.4) blur(9px); }
@@ -237,7 +244,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   background: var(--clay);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.25s var(--ease);
+  transition: transform var(--dur) var(--ease);
 }
 .nav__links a:hover::after, .nav__links a.is-active::after { transform: scaleX(1); }
 
@@ -278,9 +285,9 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   text-decoration: none;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease),
-              border-color 0.2s var(--ease), transform 0.2s var(--ease),
-              box-shadow 0.2s var(--ease);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease),
+              box-shadow var(--dur-fast) var(--ease);
 }
 .btn svg { width: 1.05em; height: 1.05em; }
 .btn--primary {
@@ -581,7 +588,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   content: ""; position: absolute; top: 50%; left: 50%;
   width: 0.85rem; height: 2px; background: currentColor; border-radius: 2px;
   transform: translate(-50%, -50%);
-  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
 }
 .faq summary .mark::after { transform: translate(-50%, -50%) rotate(90deg); }
 .faq details[open] summary .mark::after { opacity: 0; transform: translate(-50%, -50%) rotate(0); }
@@ -647,7 +654,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   .js [data-reveal] {
     opacity: 0;
     transform: translateY(16px);
-    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
   }
   .js [data-reveal].is-visible { opacity: 1; transform: none; }
   .js [data-reveal][data-reveal-delay="1"] { transition-delay: 0.08s; }
@@ -678,7 +685,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
     transform: translateY(-12px);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility var(--dur);
   }
   .nav__menu.is-open { transform: none; opacity: 1; visibility: visible; }
   .nav__menu a {
@@ -709,12 +716,13 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+  :root {
+    --dur-fast: 0.01ms;
+    --dur: 0.01ms;
+    --dur-300: 0.01ms;
+    --dur-slow: 0.01ms;
   }
+  html { scroll-behavior: auto; }
 }
 
 @media print {
