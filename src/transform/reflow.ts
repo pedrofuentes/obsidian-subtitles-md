@@ -42,7 +42,7 @@ export interface ReflowOptions {
    * When true, also start a new paragraph after a cue whose accumulated text
    * ends a sentence (`.`, `!`, or `?`, optionally followed by closing quotes
    * or brackets).
-   * @defaultValue false
+   * @defaultValue true
    */
   breakOnSentenceEnd?: boolean;
 }
@@ -86,7 +86,7 @@ function finalize(pending: PendingParagraph): Paragraph {
 export function reflow(transcript: Transcript, options: ReflowOptions = {}): Paragraph[] {
   const gapThresholdMs = options.gapThresholdMs ?? DEFAULT_GAP_THRESHOLD_MS;
   const breakOnSpeakerChange = options.breakOnSpeakerChange ?? true;
-  const breakOnSentenceEnd = options.breakOnSentenceEnd ?? false;
+  const breakOnSentenceEnd = options.breakOnSentenceEnd ?? true;
 
   const paragraphs: Paragraph[] = [];
   let pending: PendingParagraph | undefined;

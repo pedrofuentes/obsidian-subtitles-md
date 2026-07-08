@@ -262,6 +262,29 @@ describe('renderTranscriptBlock', () => {
     expect(speakers[0]?.textContent).toBe('Alice');
   });
 
+  it('renders speaker as a heading above the paragraph when speakerStyle is heading', async () => {
+    const { el, fake } = makeEl();
+
+    await renderTranscriptBlock(VTT_SPEAKER_FIXTURE, el, {
+      app: NOOP_APP,
+      speaker: true,
+      speakerStyle: 'heading',
+    });
+
+    const container = fake.findByClass('subtitles-md-transcript')[0];
+    expect(container).toBeDefined();
+    const heading = container!.children.find((c) => c.tag === 'h4');
+    expect(heading).toBeDefined();
+    expect(heading!.hasClass('subtitles-md-speaker--heading')).toBe(true);
+    expect(heading!.textContent).toBe('Alice');
+
+    // Heading style must not also render the inline bold speaker span.
+    const paragraph = fake.findByClass('subtitles-md-paragraph')[0];
+    expect(
+      paragraph?.children.some((c) => c.hasClass('subtitles-md-speaker')),
+    ).toBe(false);
+  });
+
   it('omits the speaker span when speaker is disabled', async () => {
     const { el, fake } = makeEl();
 

@@ -20,6 +20,7 @@ import {
   TRANSCRIPT_VIEW_TYPE,
   TranscriptView,
   registerTranscriptView,
+  type TranscriptViewOptions,
 } from './view';
 
 /** A lightweight stand-in for an Obsidian-augmented HTMLElement. */
@@ -236,6 +237,83 @@ describe('TranscriptView.setViewData rendering', () => {
     const all = descendants(contentEl);
     const hasText = all.some((e) => e.textContent.trim().length > 0);
     expect(hasText).toBe(true);
+  });
+});
+
+function makeViewWithOptions(options: TranscriptViewOptions): {
+  view: TranscriptView;
+  contentEl: FakeEl;
+} {
+  const view = new TranscriptView({} as never, () => options);
+  const contentEl = makeEl();
+  (view as unknown as { contentEl: FakeEl }).contentEl = contentEl;
+  return { view, contentEl };
+}
+
+describe('TranscriptView timestamp options', () => {
+  it('omits the timestamp span when timestamps is "none"', () => {
+    const { view, contentEl } = makeViewWithOptions({ timestamps: 'none' });
+
+    view.setViewData(SRT_BASIC, true);
+
+    const all = descendants(contentEl);
+    expect(all.some((e) => e.textContent === '00:00:01')).toBe(false);
+  });
+
+  it('marks aside timestamps with a modifier class', () => {
+    const { view, contentEl } = makeViewWithOptions({ timestamps: 'aside' });
+
+    view.setViewData(SRT_BASIC, true);
+
+    const all = descendants(contentEl);
+    const timestamp = all.find((e) => e.textContent === '00:00:01');
+    expect(timestamp).toBeDefined();
+    expect(timestamp!.cls.split(' ')).toContain('subtitles-md-timestamp--aside');
+  });
+});
+
+const VTT_SPEAKER = [
+  'WEBVTT',
+  '',
+  '00:00:01.000 --> 00:00:02.000',
+  '<v Alice>Good morning everyone',
+  '',
+].join('\n');
+
+describe('TranscriptView speaker style options', () => {
+  it('renders the speaker as an inline bold span by default', () => {
+    const { view, contentEl } = makeViewWithOptions({});
+
+    view.setViewData(VTT_SPEAKER, true);
+
+    const all = descendants(contentEl);
+    const speaker = all.find(
+      (e) => e.textContent === 'Alice' && e.tag === 'span',
+    );
+    expect(speaker).toBeDefined();
+    expect(speaker!.cls.split(' ')).toContain('subtitles-md-speaker');
+  });
+
+  it('renders the speaker as a heading above the paragraph when speakerStyle is heading', () => {
+    const { view, contentEl } = makeViewWithOptions({ speakerStyle: 'heading' });
+
+    view.setViewData(VTT_SPEAKER, true);
+
+    const container = contentEl.children[0];
+    expect(container).toBeDefined();
+
+    const heading = container!.children.find((e) => e.tag === 'h4');
+    expect(heading).toBeDefined();
+    expect(heading!.cls.split(' ')).toContain('subtitles-md-speaker--heading');
+    expect(heading!.textContent).toBe('Alice');
+
+    const paragraph = container!.children.find((e) =>
+      e.cls.split(' ').includes('subtitles-md-paragraph'),
+    );
+    expect(paragraph).toBeDefined();
+    const inlineSpeaker = paragraph!.children.find((c) => c.tag === 'span'
+      && c.cls.split(' ').includes('subtitles-md-speaker'));
+    expect(inlineSpeaker).toBeUndefined();
   });
 });
 

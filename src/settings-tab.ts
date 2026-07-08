@@ -50,7 +50,7 @@ export class SubtitlesMdSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Timestamps')
-      .setDesc('How cue timestamps are rendered in the generated note.')
+      .setDesc('How cue timestamps are rendered.')
       .addDropdown((dropdown) =>
         dropdown
           .addOptions(TIMESTAMP_OPTIONS)
@@ -75,7 +75,9 @@ export class SubtitlesMdSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Speaker style')
-      .setDesc('How speaker labels are formatted before their lines.')
+      .setDesc(
+        'How speaker labels are formatted: inline bold text, or a heading above the paragraph.',
+      )
       .addDropdown((dropdown) =>
         dropdown
           .addOptions(SPEAKER_OPTIONS)

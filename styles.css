@@ -47,6 +47,13 @@
 	margin-right: var(--size-4-2, 0.5rem);
 }
 
+/* Speaker heading variant: block-level line above the paragraph, no inline margin */
+.subtitles-md-speaker--heading {
+	display: block;
+	font-size: 1em;
+	margin: var(--size-4-4, 1rem) 0 var(--size-4-1, 0.25rem) 0;
+}
+
 /* Cue text: normal inline text color */
 .subtitles-md-text {
 	display: inline;

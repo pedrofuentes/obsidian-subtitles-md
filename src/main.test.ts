@@ -137,20 +137,35 @@ describe('SubtitlesMdPlugin option projections', () => {
     const options = plugin.codeBlockOptions();
     expect(options.timestamps).toBe('inline');
     expect(options.speaker).toBe(true);
+    expect(options.speakerStyle).toBe('bold');
     expect(options.reflow).toEqual(settingsToReflowOptions(plugin.settings));
   });
 
   it('projects view options from the default settings', async () => {
     const { plugin } = await loadPlugin();
     const options = plugin.viewOptions();
-    expect(options.showTimestamps).toBe(true);
+    expect(options.timestamps).toBe('inline');
+    expect(options.speakerStyle).toBe('bold');
     expect(options.reflow).toEqual(settingsToReflowOptions(plugin.settings));
+  });
+
+  it('propagates the heading speaker style to both projections', async () => {
+    const { plugin } = await loadPlugin();
+    plugin.settings.speakerStyle = 'heading';
+    expect(plugin.viewOptions().speakerStyle).toBe('heading');
+    expect(plugin.codeBlockOptions().speakerStyle).toBe('heading');
   });
 
   it('disables timestamps in both projections when set to none', async () => {
     const { plugin } = await loadPlugin();
     plugin.settings.timestamps = 'none';
-    expect(plugin.viewOptions().showTimestamps).toBe(false);
+    expect(plugin.viewOptions().timestamps).toBe('none');
     expect(plugin.codeBlockOptions().timestamps).toBe('none');
+  });
+
+  it('propagates the aside timestamp style to the view projection', async () => {
+    const { plugin } = await loadPlugin();
+    plugin.settings.timestamps = 'aside';
+    expect(plugin.viewOptions().timestamps).toBe('aside');
   });
 });
