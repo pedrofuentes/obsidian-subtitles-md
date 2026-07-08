@@ -73,6 +73,7 @@ export default class SubtitlesMdPlugin extends Plugin {
       reflow: settingsToReflowOptions(this.settings),
       timestamps: this.settings.timestamps,
       speaker: true,
+      speakerStyle: this.settings.speakerStyle,
     };
   }
 
@@ -80,7 +81,8 @@ export default class SubtitlesMdPlugin extends Plugin {
   viewOptions(): TranscriptViewOptions {
     return {
       reflow: settingsToReflowOptions(this.settings),
-      showTimestamps: this.settings.timestamps !== 'none',
+      timestamps: this.settings.timestamps,
+      speakerStyle: this.settings.speakerStyle,
     };
   }
 }

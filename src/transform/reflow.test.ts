@@ -142,13 +142,26 @@ describe('reflow', () => {
     expect(paragraphs[1]?.text).toBe('third');
   });
 
-  it('does not split on sentence end by default', () => {
+  it('splits on sentence end by default', () => {
     const cues = [
       makeCue({ index: 1, startMs: 0, endMs: 1000, text: 'This is done.' }),
       makeCue({ index: 2, startMs: 1000, endMs: 2000, text: 'And this continues' }),
     ];
 
     const paragraphs = reflow(makeTranscript(cues));
+
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0]?.text).toBe('This is done.');
+    expect(paragraphs[1]?.text).toBe('And this continues');
+  });
+
+  it('does not split on sentence end when breakOnSentenceEnd is false', () => {
+    const cues = [
+      makeCue({ index: 1, startMs: 0, endMs: 1000, text: 'This is done.' }),
+      makeCue({ index: 2, startMs: 1000, endMs: 2000, text: 'And this continues' }),
+    ];
+
+    const paragraphs = reflow(makeTranscript(cues), { breakOnSentenceEnd: false });
 
     expect(paragraphs).toHaveLength(1);
     expect(paragraphs[0]?.text).toBe('This is done. And this continues');

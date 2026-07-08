@@ -106,7 +106,7 @@ Click any `.srt` or `.vtt` file in the file explorer. The plugin opens it in a r
 | **Include frontmatter**          | Add a YAML frontmatter block with metadata                          | On        |
 | **Speaker style**                | Format speaker labels as Bold or Heading                            | Bold      |
 | **New paragraph on speaker change** | Start a new paragraph when the speaker changes                   | On        |
-| **Split on sentence end**        | Force a paragraph break at sentence boundaries                      | Off       |
+| **Split on sentence end**        | Force a paragraph break at sentence boundaries                      | On        |
 | **Paragraph gap threshold (ms)** | Minimum silence duration to start a new paragraph                   | 2000      |
 
 ## Supported Formats

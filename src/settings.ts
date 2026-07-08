@@ -38,7 +38,7 @@ export interface SubtitlesMdSettings {
 export const DEFAULT_SETTINGS: SubtitlesMdSettings = {
   gapThresholdMs: 2000,
   breakOnSpeakerChange: true,
-  breakOnSentenceEnd: false,
+  breakOnSentenceEnd: true,
   timestamps: 'inline',
   includeFrontmatter: true,
   speakerStyle: 'bold',

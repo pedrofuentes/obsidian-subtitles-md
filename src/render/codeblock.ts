@@ -24,6 +24,7 @@ import {
 } from 'obsidian';
 import { formatTimestamp } from '../model';
 import { parseSubtitle } from '../parser';
+import type { SpeakerStyle } from '../serialize/markdown';
 import { reflow, type Paragraph, type ReflowOptions } from '../transform/reflow';
 
 /** Where (and whether) a paragraph's start timestamp is rendered. */
@@ -43,6 +44,11 @@ export interface TranscriptBlockOptions {
    * @defaultValue true
    */
   speaker?: boolean;
+  /**
+   * How to render speaker labels when known and `speaker` is enabled.
+   * @defaultValue 'bold'
+   */
+  speakerStyle?: SpeakerStyle;
 }
 
 /** Full options for {@link renderTranscriptBlock}, including the {@link App}. */
@@ -56,6 +62,7 @@ const PARAGRAPH_CLASS = 'subtitles-md-paragraph';
 const TIMESTAMP_CLASS = 'subtitles-md-timestamp';
 const TIMESTAMP_ASIDE_CLASS = 'subtitles-md-timestamp--aside';
 const SPEAKER_CLASS = 'subtitles-md-speaker';
+const SPEAKER_HEADING_CLASS = 'subtitles-md-speaker--heading';
 const TEXT_CLASS = 'subtitles-md-text';
 const MESSAGE_CLASS = 'subtitles-md-message';
 
@@ -98,7 +105,17 @@ function renderParagraph(
   paragraph: Paragraph,
   timestamps: TimestampMode,
   speaker: boolean,
+  speakerStyle: SpeakerStyle,
 ): void {
+  const speakerLabel = speaker ? paragraph.speaker : undefined;
+
+  if (speakerLabel !== undefined && speakerStyle === 'heading') {
+    container.createEl('h4', {
+      cls: [SPEAKER_CLASS, SPEAKER_HEADING_CLASS],
+      text: speakerLabel,
+    });
+  }
+
   const block = container.createDiv({ cls: PARAGRAPH_CLASS });
 
   if (timestamps !== 'none') {
@@ -109,8 +126,8 @@ function renderParagraph(
     block.createSpan({ cls, text: `[${formatTimestamp(paragraph.startMs)}]` });
   }
 
-  if (speaker && paragraph.speaker !== undefined) {
-    block.createSpan({ cls: SPEAKER_CLASS, text: paragraph.speaker });
+  if (speakerLabel !== undefined && speakerStyle !== 'heading') {
+    block.createSpan({ cls: SPEAKER_CLASS, text: speakerLabel });
   }
 
   block.createSpan({ cls: TEXT_CLASS, text: paragraph.text });
@@ -136,6 +153,7 @@ export async function renderTranscriptBlock(
 
   const timestamps = opts.timestamps ?? 'inline';
   const speaker = opts.speaker ?? true;
+  const speakerStyle = opts.speakerStyle ?? 'bold';
 
   let content: string;
   const reference = parseFileReference(source);
@@ -172,7 +190,7 @@ export async function renderTranscriptBlock(
 
   const container = el.createDiv({ cls: CONTAINER_CLASS });
   for (const paragraph of paragraphs) {
-    renderParagraph(container, paragraph, timestamps, speaker);
+    renderParagraph(container, paragraph, timestamps, speaker, speakerStyle);
   }
 }
 

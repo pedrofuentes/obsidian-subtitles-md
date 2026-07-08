@@ -16,6 +16,8 @@ import { TextFileView, type Plugin, type WorkspaceLeaf } from 'obsidian';
 import { formatTimestamp } from '../model';
 import { parseSubtitle } from '../parser';
 import { reflow, type Paragraph, type ReflowOptions } from '../transform/reflow';
+import type { SpeakerStyle } from '../serialize/markdown';
+import type { TimestampMode } from './codeblock';
 
 /** Stable identifier Obsidian uses to associate this view with a file type. */
 export const TRANSCRIPT_VIEW_TYPE = 'subtitles-md-transcript-view';
@@ -25,10 +27,15 @@ export interface TranscriptViewOptions {
   /** Passed through to {@link reflow}. */
   reflow?: ReflowOptions;
   /**
-   * Render each paragraph's start timestamp.
-   * @defaultValue true
+   * How to render each paragraph's start timestamp.
+   * @defaultValue 'inline'
    */
-  showTimestamps?: boolean;
+  timestamps?: TimestampMode;
+  /**
+   * How to render speaker labels when known.
+   * @defaultValue 'bold'
+   */
+  speakerStyle?: SpeakerStyle;
 }
 
 const EMPTY_MESSAGE = 'No readable cues found in this subtitle file.';
@@ -101,27 +108,38 @@ export class TranscriptView extends TextFileView {
       return;
     }
 
-    const showTimestamps = this.getOptions().showTimestamps ?? true;
+    const timestamps = this.getOptions().timestamps ?? 'inline';
+    const speakerStyle = this.getOptions().speakerStyle ?? 'bold';
     for (const paragraph of paragraphs) {
-      this.renderParagraph(container, paragraph, showTimestamps);
+      this.renderParagraph(container, paragraph, timestamps, speakerStyle);
     }
   }
 
   private renderParagraph(
     container: HTMLElement,
     paragraph: Paragraph,
-    showTimestamps: boolean,
+    timestamps: TimestampMode,
+    speakerStyle: SpeakerStyle,
   ): void {
-    const el = container.createDiv({ cls: 'subtitles-md-paragraph' });
-
-    if (showTimestamps) {
-      el.createSpan({
-        cls: 'subtitles-md-timestamp',
-        text: formatTimestamp(paragraph.startMs),
+    if (paragraph.speaker !== undefined && speakerStyle === 'heading') {
+      // Untrusted: rendered as textContent only.
+      container.createEl('h4', {
+        cls: ['subtitles-md-speaker', 'subtitles-md-speaker--heading'],
+        text: paragraph.speaker,
       });
     }
 
-    if (paragraph.speaker !== undefined) {
+    const el = container.createDiv({ cls: 'subtitles-md-paragraph' });
+
+    if (timestamps !== 'none') {
+      const cls =
+        timestamps === 'aside'
+          ? ['subtitles-md-timestamp', 'subtitles-md-timestamp--aside']
+          : 'subtitles-md-timestamp';
+      el.createSpan({ cls, text: formatTimestamp(paragraph.startMs) });
+    }
+
+    if (paragraph.speaker !== undefined && speakerStyle !== 'heading') {
       // Untrusted: rendered as textContent only.
       el.createSpan({ cls: 'subtitles-md-speaker', text: paragraph.speaker });
     }
