@@ -347,7 +347,7 @@ function makeViewWithConvert(
   const view = new TranscriptView(
     {} as never,
     () => ({}),
-    onConvert as never,
+    onConvert,
   );
   const contentEl = makeEl();
   (view as unknown as { contentEl: FakeEl }).contentEl = contentEl;
