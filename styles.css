@@ -67,3 +67,27 @@
 	padding: var(--size-4-4, 1rem);
 	text-align: center;
 }
+
+/* Convert banner: hint bar above the read-only file view with a CTA button */
+.subtitles-md-convert-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--size-4-2, 0.5rem);
+	max-width: 42rem;
+	margin: var(--size-4-2, 0.5rem) auto 0;
+	padding: var(--size-4-2, 0.5rem) var(--size-4-3, 0.75rem);
+	border: 1px solid var(--background-modifier-border, #ddd);
+	border-radius: var(--radius-m, 8px);
+	background-color: var(--background-secondary, #f5f5f5);
+}
+
+.subtitles-md-convert-message {
+	color: var(--text-muted, #888);
+	font-size: var(--font-ui-small, 0.9em);
+}
+
+.subtitles-md-convert-button {
+	flex-shrink: 0;
+	white-space: nowrap;
+}

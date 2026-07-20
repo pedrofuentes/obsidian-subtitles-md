@@ -1,6 +1,6 @@
 import { Plugin } from 'obsidian';
 import type { ConvertOptions } from './commands/convertToNote';
-import { runConvertActiveFile } from './commands/runConvert';
+import { runConvertActiveFile, runConvertFile } from './commands/runConvert';
 import {
   registerTranscriptCodeBlock,
   type TranscriptBlockOptions,
@@ -43,7 +43,13 @@ export default class SubtitlesMdPlugin extends Plugin {
     });
 
     registerTranscriptCodeBlock(this, () => this.codeBlockOptions());
-    registerTranscriptView(this, () => this.viewOptions());
+    registerTranscriptView(
+      this,
+      () => this.viewOptions(),
+      (file) => {
+        void runConvertFile(this.app, file, this.settingsToOptions());
+      },
+    );
     this.addSettingTab(new SubtitlesMdSettingTab(this.app, this));
   }
 

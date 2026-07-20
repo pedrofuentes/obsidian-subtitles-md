@@ -12,7 +12,12 @@
  * inert, literal text.
  */
 
-import { TextFileView, type Plugin, type WorkspaceLeaf } from 'obsidian';
+import {
+  TextFileView,
+  type Plugin,
+  type TFile,
+  type WorkspaceLeaf,
+} from 'obsidian';
 import { formatTimestamp } from '../model';
 import { parseSubtitle } from '../parser';
 import { reflow, type Paragraph, type ReflowOptions } from '../transform/reflow';
@@ -38,8 +43,17 @@ export interface TranscriptViewOptions {
   speakerStyle?: SpeakerStyle;
 }
 
+/**
+ * Callback invoked when the user clicks the banner's convert button. Wired (in
+ * `main.ts`) to the same conversion pipeline as the command palette command.
+ */
+export type ConvertFileHandler = (file: TFile) => void;
+
 const EMPTY_MESSAGE = 'No readable cues found in this subtitle file.';
 const ERROR_MESSAGE = 'This file could not be displayed as a transcript.';
+const BANNER_MESSAGE =
+  'This is a read-only preview. Convert it to a Markdown note to edit.';
+const CONVERT_BUTTON_LABEL = 'Convert to note';
 
 /**
  * A read-only transcript renderer for `.srt` / `.vtt` files.
@@ -50,13 +64,16 @@ const ERROR_MESSAGE = 'This file could not be displayed as a transcript.';
  */
 export class TranscriptView extends TextFileView {
   private readonly getOptions: () => TranscriptViewOptions;
+  private readonly onConvert?: ConvertFileHandler;
 
   constructor(
     leaf: WorkspaceLeaf,
     getOptions: () => TranscriptViewOptions = () => ({}),
+    onConvert?: ConvertFileHandler,
   ) {
     super(leaf);
     this.getOptions = getOptions;
+    this.onConvert = onConvert;
   }
 
   getViewType(): string {
@@ -92,6 +109,8 @@ export class TranscriptView extends TextFileView {
     const { contentEl } = this;
     contentEl.empty();
 
+    this.renderConvertBanner(contentEl);
+
     const container = contentEl.createDiv({ cls: 'subtitles-md-transcript' });
 
     let paragraphs: Paragraph[];
@@ -113,6 +132,34 @@ export class TranscriptView extends TextFileView {
     for (const paragraph of paragraphs) {
       this.renderParagraph(container, paragraph, timestamps, speakerStyle);
     }
+  }
+
+  /**
+   * Render the "convert to note" banner above the transcript, mirroring the
+   * convertible-file pattern of plugins like docxer. Skipped entirely when no
+   * convert handler was wired in or no file is open, so the view stays a pure
+   * read-only renderer in those contexts.
+   */
+  private renderConvertBanner(contentEl: HTMLElement): void {
+    if (this.onConvert === undefined || this.file === null) {
+      return;
+    }
+
+    const banner = contentEl.createDiv({ cls: 'subtitles-md-convert-banner' });
+    banner.createSpan({
+      cls: 'subtitles-md-convert-message',
+      text: BANNER_MESSAGE,
+    });
+    const button = banner.createEl('button', {
+      cls: ['subtitles-md-convert-button', 'mod-cta'],
+      text: CONVERT_BUTTON_LABEL,
+    });
+    button.onclick = (): void => {
+      // Read the file at click time; it may have changed since render.
+      if (this.file !== null) {
+        this.onConvert?.(this.file);
+      }
+    };
   }
 
   private renderParagraph(
@@ -156,10 +203,11 @@ export class TranscriptView extends TextFileView {
 export function registerTranscriptView(
   plugin: Plugin,
   getOptions?: () => TranscriptViewOptions,
+  onConvert?: ConvertFileHandler,
 ): void {
   plugin.registerView(
     TRANSCRIPT_VIEW_TYPE,
-    (leaf) => new TranscriptView(leaf, getOptions),
+    (leaf) => new TranscriptView(leaf, getOptions, onConvert),
   );
   plugin.registerExtensions(['srt', 'vtt'], TRANSCRIPT_VIEW_TYPE);
 }
