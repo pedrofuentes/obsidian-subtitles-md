@@ -23,22 +23,25 @@ function isSubtitleFile(file: TFile | null): file is TFile {
 }
 
 /**
- * Convert the workspace's active `.srt` / `.vtt` file into a transcript note,
- * open the new note, and report the outcome via a `Notice`.
+ * Convert a specific `.srt` / `.vtt` file into a transcript note, open the new
+ * note, and report the outcome via a `Notice`.
  *
- * - No active subtitle file → a guidance `Notice`, no other effect.
+ * This is the shared action behind both the command palette command (via
+ * {@link runConvertActiveFile}) and the transcript view's convert button.
+ *
+ * - Not a subtitle file (or `null`) → a guidance `Notice`, no other effect.
  * - Conversion failure (e.g. {@link UnsupportedFormatError} or a vault error) →
  *   an error `Notice`; the error is swallowed, never rethrown.
  *
  * @param app The Obsidian app providing workspace and vault access.
+ * @param file The subtitle file to convert.
  * @param options Optional reflow/serialize tuning forwarded to the pipeline.
  */
-export async function runConvertActiveFile(
+export async function runConvertFile(
   app: App,
+  file: TFile | null,
   options?: ConvertOptions,
 ): Promise<void> {
-  const file = app.workspace.getActiveFile();
-
   if (!isSubtitleFile(file)) {
     new Notice('Open a .srt or .vtt file first');
     return;
@@ -52,4 +55,18 @@ export async function runConvertActiveFile(
     const message = error instanceof Error ? error.message : String(error);
     new Notice(`Could not convert: ${message}`);
   }
+}
+
+/**
+ * Convert the workspace's active `.srt` / `.vtt` file into a transcript note.
+ * Thin wrapper around {@link runConvertFile} for the command palette.
+ *
+ * @param app The Obsidian app providing workspace and vault access.
+ * @param options Optional reflow/serialize tuning forwarded to the pipeline.
+ */
+export async function runConvertActiveFile(
+  app: App,
+  options?: ConvertOptions,
+): Promise<void> {
+  await runConvertFile(app, app.workspace.getActiveFile(), options);
 }

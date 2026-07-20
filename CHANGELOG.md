@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- The read-only transcript file view now shows a banner with a "Convert to note" button, so `.srt`/`.vtt` files can be converted to editable Markdown notes with one click — no need to open the command palette. The button uses the same conversion pipeline (and settings) as the existing command.
+
 ### Changed
 
 ### Fixed

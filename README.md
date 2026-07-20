@@ -6,7 +6,7 @@ Read `.srt`/`.vtt` subtitle & transcript files as comfortable, searchable Markdo
 
 - **Convert subtitle files to notes** — run the "Convert subtitle file to transcript note" command on any `.srt`/`.vtt` file to create a clean, readable Markdown note.
 - **Embed transcripts with code blocks** — use ` ```transcript ` blocks to render inline subtitle content or reference a subtitle file with `file: path/to/sub.srt`.
-- **Read-only transcript view** — click any `.srt`/`.vtt` file in your vault to open it as a readable transcript without converting it.
+- **Read-only transcript view** — click any `.srt`/`.vtt` file in your vault to open it as a readable transcript without converting it. A banner at the top offers a one-click **Convert to note** button.
 - **Configurable reflow & formatting** — control how cues are grouped into paragraphs, how timestamps and speakers are displayed, and whether to include frontmatter metadata — all via Settings.
 - **Pure Markdown output** — transcript text becomes first-class vault content: searchable via Obsidian's search, linkable with `[[wikilinks]]`, and ready for annotation.
 
@@ -22,7 +22,7 @@ A `transcript` code block renders inline subtitle content as clean, readable par
 
 ![Read-only .srt transcript view](docs/images/file-view.png)
 
-Click any `.srt` or `.vtt` file in your vault to open it as a readable transcript without converting it.
+Click any `.srt` or `.vtt` file in your vault to open it as a readable transcript without converting it. When you want an editable copy, use the **Convert to note** button in the banner above the transcript — it creates the same Markdown note as the convert command.
 
 ### Converted Transcript Note
 
