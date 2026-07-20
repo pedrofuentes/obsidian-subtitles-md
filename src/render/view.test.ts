@@ -337,6 +337,102 @@ describe('TranscriptView.getViewData', () => {
   });
 });
 
+function makeViewWithConvert(
+  onConvert: (file: unknown) => void,
+  file: { basename: string; name: string } | null = {
+    basename: 'episode',
+    name: 'episode.srt',
+  },
+): { view: TranscriptView; contentEl: FakeEl } {
+  const view = new TranscriptView(
+    {} as never,
+    () => ({}),
+    onConvert as never,
+  );
+  const contentEl = makeEl();
+  (view as unknown as { contentEl: FakeEl }).contentEl = contentEl;
+  if (file) {
+    (view as unknown as { file: unknown }).file = file;
+  }
+  return { view, contentEl };
+}
+
+/** Find the banner's convert button anywhere under `contentEl`. */
+function findConvertButton(contentEl: FakeEl): FakeEl | undefined {
+  return descendants(contentEl).find((e) => e.tag === 'button');
+}
+
+describe('TranscriptView convert banner', () => {
+  it('renders a banner with a convert button when a convert handler is provided', () => {
+    const { view, contentEl } = makeViewWithConvert(vi.fn());
+
+    view.setViewData(SRT_BASIC, true);
+
+    const button = findConvertButton(contentEl);
+    expect(button).toBeDefined();
+    expect(button!.cls.split(' ')).toContain('subtitles-md-convert-button');
+    expect(button!.textContent.length).toBeGreaterThan(0);
+
+    // The banner also explains why the view is read-only.
+    const all = descendants(contentEl);
+    const message = all.find(
+      (e) => e.tag === 'span' && /read-only/i.test(e.textContent),
+    );
+    expect(message).toBeDefined();
+  });
+
+  it('invokes the convert handler with the open file when the button is clicked', () => {
+    const onConvert = vi.fn();
+    const file = { basename: 'episode', name: 'episode.srt' };
+    const { view, contentEl } = makeViewWithConvert(onConvert, file);
+
+    view.setViewData(SRT_BASIC, true);
+
+    const button = findConvertButton(contentEl) as unknown as {
+      onclick?: () => void;
+    };
+    expect(button?.onclick).toBeTypeOf('function');
+    button.onclick!();
+
+    expect(onConvert).toHaveBeenCalledTimes(1);
+    expect(onConvert).toHaveBeenCalledWith(file);
+  });
+
+  it('renders no banner or button when no convert handler is provided', () => {
+    const { view, contentEl } = makeView({ basename: 'e', name: 'e.srt' });
+
+    view.setViewData(SRT_BASIC, true);
+
+    expect(findConvertButton(contentEl)).toBeUndefined();
+  });
+
+  it('renders no banner when no file is open', () => {
+    const { view, contentEl } = makeViewWithConvert(vi.fn(), null);
+
+    view.setViewData(SRT_BASIC, true);
+
+    expect(findConvertButton(contentEl)).toBeUndefined();
+  });
+
+  it('does not stack banners across re-renders', () => {
+    const { view, contentEl } = makeViewWithConvert(vi.fn());
+
+    view.setViewData(SRT_BASIC, true);
+    view.setViewData(SRT_BASIC, true);
+
+    const buttons = descendants(contentEl).filter((e) => e.tag === 'button');
+    expect(buttons).toHaveLength(1);
+  });
+
+  it('still shows the banner for unparseable content', () => {
+    const { view, contentEl } = makeViewWithConvert(vi.fn());
+
+    view.setViewData('not a subtitle file at all', true);
+
+    expect(findConvertButton(contentEl)).toBeDefined();
+  });
+});
+
 describe('registerTranscriptView', () => {
   it('registers the view and the .srt/.vtt extensions', () => {
     const registerView = vi.fn();

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { App, TFile, Vault, Workspace, WorkspaceLeaf } from 'obsidian';
-import { runConvertActiveFile } from './runConvert';
+import { runConvertActiveFile, runConvertFile } from './runConvert';
 
 const { noticeMessages } = vi.hoisted(() => ({
   noticeMessages: [] as string[],
@@ -194,5 +194,62 @@ describe('runConvertActiveFile', () => {
     expect(opened).toHaveLength(0);
     expect(noticeMessages).toHaveLength(1);
     expect(noticeMessages[0]).toBe('Could not convert: disk on fire');
+  });
+});
+
+describe('runConvertFile', () => {
+  beforeEach(() => {
+    noticeMessages.length = 0;
+  });
+
+  it('converts the given file (not the active one), opens the note, and shows success', async () => {
+    const file = makeFile('episode.srt', 'Subtitles');
+    // `active: null` proves the passed-in file drives the conversion.
+    const { app, created, opened } = makeApp({
+      active: null,
+      content: SRT_FIXTURE,
+    });
+
+    await runConvertFile(app, file);
+
+    expect(created).toHaveLength(1);
+    expect(created[0]?.path).toBe('Subtitles/episode.md');
+    expect(opened).toHaveLength(1);
+    expect(opened[0]?.path).toBe('Subtitles/episode.md');
+    expect(noticeMessages).toHaveLength(1);
+    expect(noticeMessages[0]).toContain('episode');
+  });
+
+  it('passes options through to the conversion pipeline', async () => {
+    const file = makeFile('episode.srt', 'Subtitles');
+    const { app, created } = makeApp({ active: null, content: SRT_FIXTURE });
+
+    await runConvertFile(app, file, { targetFolder: 'Transcripts' });
+
+    expect(created[0]?.path).toBe('Transcripts/episode.md');
+  });
+
+  it('shows guidance and does nothing for a non-subtitle file', async () => {
+    const file = makeFile('note.md', 'Notes');
+    const { app, created } = makeApp({ active: null, content: 'hi' });
+
+    await runConvertFile(app, file);
+
+    expect(created).toHaveLength(0);
+    expect(noticeMessages).toEqual(['Open a .srt or .vtt file first']);
+  });
+
+  it('surfaces conversion errors as a Notice without throwing', async () => {
+    const file = makeFile('broken.srt', 'Subtitles');
+    const { app, created, opened } = makeApp({
+      active: null,
+      readRejects: true,
+    });
+
+    await expect(runConvertFile(app, file)).resolves.toBeUndefined();
+
+    expect(created).toHaveLength(0);
+    expect(opened).toHaveLength(0);
+    expect(noticeMessages).toEqual(['Could not convert: disk on fire']);
   });
 });

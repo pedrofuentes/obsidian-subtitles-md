@@ -64,6 +64,16 @@ vi.mock('obsidian', () => {
   };
 });
 
+// Mock the command wrappers so the transcript view's convert wiring is
+// observable without exercising the whole conversion pipeline.
+const { runConvertFileMock } = vi.hoisted(() => ({
+  runConvertFileMock: vi.fn(() => Promise.resolve()),
+}));
+vi.mock('./commands/runConvert', () => ({
+  runConvertActiveFile: vi.fn(() => Promise.resolve()),
+  runConvertFile: runConvertFileMock,
+}));
+
 import SubtitlesMdPlugin from './main';
 import { TRANSCRIPT_VIEW_TYPE } from './render/view';
 import { settingsToReflowOptions } from './settings';
@@ -128,6 +138,32 @@ describe('SubtitlesMdPlugin onload wiring', () => {
   it('adds the settings tab exactly once', async () => {
     const { hooks } = await loadPlugin();
     expect(hooks.addSettingTab).toHaveBeenCalledTimes(1);
+  });
+
+  it('wires transcript views with a convert handler that runs the conversion pipeline', async () => {
+    runConvertFileMock.mockClear();
+    const { plugin, hooks } = await loadPlugin();
+
+    const registerCall = hooks.registerView.mock.calls[0];
+    expect(registerCall).toBeDefined();
+    const creator = registerCall![1] as (leaf: unknown) => unknown;
+    const view = creator({}) as { onConvert?: (file: unknown) => void };
+    expect(view.onConvert).toBeTypeOf('function');
+
+    const file = {
+      path: 'clips/a.srt',
+      name: 'a.srt',
+      basename: 'a',
+      extension: 'srt',
+    };
+    view.onConvert!(file);
+
+    expect(runConvertFileMock).toHaveBeenCalledTimes(1);
+    expect(runConvertFileMock).toHaveBeenCalledWith(
+      plugin.app,
+      file,
+      plugin.settingsToOptions(),
+    );
   });
 });
 
